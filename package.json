@@ -1,0 +1,11 @@
+{
+  "name": "loewetag-client",
+  "version": "0.0.1",
+  "description": "A UI and Server for the LoeweTag project",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Loewe_111",
+  "license": "MIT"
+}
