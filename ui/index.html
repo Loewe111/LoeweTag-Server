@@ -2,11 +2,59 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <!-- default-src 'self' script-src 'self';  -->
+    <meta http-equiv="Content-Security-Policy" content="">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="bootstrap.css">
     <title>LoeweTag</title>
   </head>
   <body>
+    <nav class="navbar navbar-expand-sm bg-danger navbar-light">
+      <div class="container-fluid">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link btn btn-dark text-white mx-2 disabled" href="index.html">Devices</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark text-white mx-2" href="gamemodes.html">Gamemodes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark text-white mx-2" href="leaderboard.html">Leaderboard</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container rounded bg-danger p-2 my-2" id="serial-container">
+      <div class="dropdown my-1">
+        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">
+          Serial Ports
+        </button>
+        <ul class="dropdown-menu" id="serial-devices">
+          <li><h5 class="dropdown-header">No Devices</h5></li>
+        </ul>
+      </div>
+      <button class="btn btn-dark disabled" id="serial-connect">CONNECT</button>
+    </div>
+
+    <div class="container rounded bg-danger p-2 my-2">
+      <table class="table table-striped table-dark">
+        <thead>
+          <th>ID</th>
+          <th>Type</th>
+          <th>Team ID</th>
+          <th>Firmware</th>
+        </thead>
+        <tbody id="device-table">
+          <th>No Devices</th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tbody>
+      </table>
+    </div>
     
+    <!-- Load script -->
+    <script src="index.js"></script>
   </body>
 </html>

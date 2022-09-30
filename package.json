@@ -7,5 +7,9 @@
     "start": "electron ."
   },
   "author": "Loewe_111",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^21.0.1",
+    "serialport": "^10.4.0"
+  }
 }
