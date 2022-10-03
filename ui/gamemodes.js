@@ -72,4 +72,4 @@ async function start(){
 
 setup()
 main()
-setInterval(main, 1000)
+setInterval(main, 2000)
