@@ -67,7 +67,11 @@ function handleIpc(){ //Setup IPC-main handlers
   })
 
   ipcMain.handle("game:selectGame", (event, gameid) => {
-    console.debug(gameid)
+    if(typeof gamemode !== 'undefined'){
+      gamemode.stop()
+      gamestate.running = false
+      clearInterval(gamemode.intervalID)
+    }
     gamemode = new gamemodes[gameid].game(devices, ser)
     gamemode.init()
     gamestate.gameid = gameid
@@ -123,7 +127,7 @@ function handleSerial(data){
       ser.write(encodeMessage("gamestate",gamestate.state,message.from))
     }
   }else if(message.type == "hit"){
-    if(gamemode != undefined){
+    if(typeof gamemode !== 'undefined'){
       gamemode.hit(message.id, message.from)
     }
   }else{

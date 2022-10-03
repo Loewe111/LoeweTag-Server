@@ -19,7 +19,6 @@ class game{
     })
     this.intervalID = 0
     this.ser = ser
-    console.log(this.values)
     this.ser.write(encodeMessage("gamestate",1))
     this.ser.write(encodeMessages("color",[0,0,255]))
   }
