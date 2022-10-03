@@ -1,8 +1,20 @@
-connected = true
+serialConnected = false
+serialPort = undefined
+
+async function setup(){
+  serialState = await window.serial.getState()
+  serialConnected = serialState.isOpen
+  serialPort = serialState.path
+  if(serialConnected){
+    document.getElementById("serial-dropdown").innerHTML = serialPort
+    document.getElementById("serial-connect").innerHTML = "DISCONNECT"
+    document.getElementById("serial-connect").classList.remove("disabled")
+  }
+}
 
 async function main(){
 
-  if(connected){
+  if(serialConnected){
     deviceList = await window.devices.getDevices()
     table = document.getElementById("device-table");
     table.innerHTML = ""
@@ -11,7 +23,7 @@ async function main(){
       row.insertCell(-1).innerHTML = key
       row.insertCell(-1).innerHTML = value.type
       row.insertCell(-1).innerHTML = value.teamId
-      row.insertCell(-1).innerHTML = value.firmwareString
+      row.insertCell(-1).innerHTML = value.firmware
     }
   }else{
     serialDeviceList = await window.serial.getDevices()
@@ -29,14 +41,30 @@ async function main(){
       }
     }
   }
+  serialState = await window.serial.getState()
+  serialConnected = serialState.isOpen
 }
 
 async function selectPort(port){
-  await window.serial.connectTo(serialDeviceList[port].path)
+  serialPort = serialDeviceList[port].path
+  document.getElementById("serial-connect").classList.remove("disabled")
+  document.getElementById("serial-dropdown").innerHTML = serialPort
 }
+
+async function connectSerial(){
+  if(serialConnected){
+    await window.serial.disconnect()
+    document.getElementById("serial-connect").innerHTML = "CONNECT"
+  }else{
+    await window.serial.connectTo(serialPort)
+    document.getElementById("serial-connect").innerHTML = "DISCONNECT"
+  }
+}
+
 
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Should not be used, but here if needed
 
-// main()
+main()
+setup()
 setInterval(main, 1000)

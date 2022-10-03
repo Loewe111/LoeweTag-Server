@@ -13,13 +13,13 @@
       <div class="container-fluid">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link btn btn-dark text-white mx-2 disabled" href="index.html">Devices</a>
+            <a class="nav-link btn btn-dark text-white mx-2" href="index.html" id="nav-devices">Devices</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark text-white mx-2" href="gamemodes.html">Gamemodes</a>
+            <a class="nav-link btn btn-outline-dark text-white mx-2" href="gamemodes.html" id="nav-gamemodes">Gamemodes</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark text-white mx-2" href="leaderboard.html">Leaderboard</a>
+            <a class="nav-link btn btn-outline-dark text-white mx-2" href="leaderboard.html" id="nav-leaderboard">Leaderboard</a>
           </li>
         </ul>
       </div>
@@ -27,14 +27,14 @@
 
     <div class="container rounded bg-danger p-2 my-2" id="serial-container">
       <div class="dropdown my-1">
-        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">
+        <button type="button" class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" id="serial-dropdown">
           Serial Ports
         </button>
         <ul class="dropdown-menu" id="serial-devices">
           <li><h5 class="dropdown-header">No Devices</h5></li>
         </ul>
       </div>
-      <button class="btn btn-dark disabled" id="serial-connect">CONNECT</button>
+      <button class="btn btn-dark disabled" id="serial-connect" onclick="connectSerial()">CONNECT</button>
     </div>
 
     <div class="container rounded bg-danger p-2 my-2">
