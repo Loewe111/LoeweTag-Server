@@ -24,7 +24,39 @@
         </ul>
       </div>
     </nav>
+
+    <div class="modal" id="teamSettings">
+      <div class="modal-dialog">
+        <div class="modal-content">
     
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Teams</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+    
+          <!-- Modal body -->
+          <div class="modal-body">
+            <table class="table table-danger table-danger">
+              <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>Team</th>
+                </tr>
+              </thead>
+              <tbody id="teams-table"></tbody>
+            </table>
+          </div>
+    
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="confirmTeams()">OK</button>
+          </div>
+    
+        </div>
+      </div>
+    </div>
+
     <div id="gamestate"></div>
     <div id="gamemodes"></div>
 

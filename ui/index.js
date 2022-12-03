@@ -22,7 +22,7 @@ async function main(){
       row = table.insertRow(-1)
       row.insertCell(-1).innerHTML = key
       row.insertCell(-1).innerHTML = value.type
-      row.insertCell(-1).innerHTML = value.teamId
+      // row.insertCell(-1).innerHTML = value.teamId
       row.insertCell(-1).innerHTML = value.firmware
     }
   }else{
