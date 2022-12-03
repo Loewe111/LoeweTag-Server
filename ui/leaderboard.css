@@ -1,0 +1,35 @@
+:root{
+  --teamRed: rgb(255,0,0);
+  --teamGreen: rgb(0,255,0);
+  --teamBlue: rgb(0,0,255);
+  --teamYellow: rgb(255,255,0);
+  --teamCyan: rgb(0, 255, 255);
+  --teamPurple: rgb(255,0,255);
+  --teamOrange: rgb(255,127,0);
+}
+
+.bg-team-red{
+  background-color: var(--teamRed);
+}
+.bg-team-green{
+  background-color: var(--teamGreen);
+}
+.bg-team-blue{
+  background-color: var(--teamBlue);
+}
+.bg-team-yellow{
+  background-color: var(--teamYellow);
+}
+.bg-team-cyan{
+  background-color: var(--teamCyan);
+}
+.bg-team-purple{
+  background-color: var(--teamPurple);
+}
+.bg-team-orange{
+  background-color: var(--teamOrange);
+}
+
+.hidden{
+  display: none;
+}
