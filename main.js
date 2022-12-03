@@ -165,12 +165,12 @@ gamemodes = {}
 gamemodesInfo = {}
 
 //Load gamemodes
-function loadGamemodes(path="./gamemodes"){
-  plugins = JSON.parse(fs.readFileSync(path+"/gamemodes.json"))
+function loadGamemodes(pathString="gamemodes"){
+  plugins = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, "gamemodes.json")))
   Object.entries(plugins).forEach(([key, value]) => {
-    info = JSON.parse(fs.readFileSync(path+value.info))
+    info = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, value.info)))
     gamemodes[key] = {
-      game: require(path+value.path),
+      game: require(path.join(__dirname, pathString, value.path)),
       name: info.name,
       description: info.description,
       version: info.version,

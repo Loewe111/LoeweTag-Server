@@ -1,7 +1,7 @@
 {
   "name": "loewetag-client",
   "version": "0.0.1",
-  "description": "A UI and Server for the LoeweTag project",
+  "description": "A GUI and Server for the LoeweTag project.",
   "main": "main.js",
   "scripts": {
     "test": "electron .",
@@ -25,7 +25,9 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "/icons/icon"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
