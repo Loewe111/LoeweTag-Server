@@ -6,12 +6,12 @@ class game{
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
-          HP: 30,
-          MHP: 30,
+          HP: 100,
+          MHP: 100,
           SP: 50,
           MSP: 100,
           ATK: 0,
-          MATK: 10,
+          MATK: 100,
           RT: 10,
           PTS: 0,
           KILL: 0,
@@ -65,6 +65,12 @@ class game{
   hit(sendID, recieveID){//required function, gets called when a player is hit, sendID is the ID of the player who has shot the player, recieveID is the ID of the player who has been shot
     if(this.teams[sendID] != this.teams[recieveID]){
       this.values[recieveID].HP -= this.values[sendID].ATK
+      this.values[sendID].PTS += 100
+      this.values[sendID].KILL += 1
+    }else{
+      if(this.values[recieveID].HP <= 0){
+        this.values[recieveID].HP = this.values[recieveID].MHP
+      }
     }
   }
   stop(){//required function, gets called when the game has been stopped
