@@ -21,7 +21,9 @@ contextBridge.exposeInMainWorld('serial', {
     getState: () => ipcRenderer.invoke('game:getState'),
     startGame: () => ipcRenderer.invoke('game:startGame'),
     stopGame: () => ipcRenderer.invoke('game:stopGame'),
-    selectGame: (gameid) => ipcRenderer.invoke('game:selectGame', gameid)
+    selectGame: (gameid) => ipcRenderer.invoke('game:selectGame', gameid),
+    getPlayers: () => ipcRenderer.invoke('game:getPlayers'),
+    setTeams: (teams) => ipcRenderer.invoke('game:setTeams',teams)
   })
 
 window.addEventListener('DOMContentLoaded', () => {

@@ -22,7 +22,7 @@ const createWindow = () => {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     },
-    icon:'icon.png'
+    icon:'icons/icon.png'
   })
 
   win.loadFile('ui/index.html')
@@ -91,11 +91,25 @@ function handleIpc(){ //Setup IPC-main handlers
     gamestate.running = false
     clearInterval(gamemode.intervalID)
   })
+
+  ipcMain.handle("game:getPlayers", () => {
+    if(typeof gamemode !== 'undefined'){
+      return gamemode.players
+    }else{
+      return []
+    }
+  })
+
+  ipcMain.handle("game:setTeams", (event, teams) => {
+    if(typeof gamemode !== 'undefined'){
+      gamemode.setTeams(teams)
+    }
+  })
 }
 
 
 function handleSerial(data){
-  data = data.replaceAll("'",'"')
+  data = data.replaceAll("'",'"') //Replace all ' with " for compability with old gun software
   try {
     message = JSON.parse(data)
   } catch (e) {
@@ -174,13 +188,15 @@ function loadGamemodes(pathString="gamemodes"){
       name: info.name,
       description: info.description,
       version: info.version,
-      versionString: info.versionString
+      versionString: info.versionString,
+      hasTeams: info.hasTeams
     }
     gamemodesInfo[key] = {
       name: info.name,
       description: info.description,
       version: info.version,
-      versionString: info.versionString
+      versionString: info.versionString,
+      hasTeams: info.hasTeams
     }
   })
 }

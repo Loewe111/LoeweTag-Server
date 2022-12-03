@@ -1,6 +1,8 @@
 class game{
-  constructor(devices, ser){
+  constructor(devices, ser){//devices is the object containing all connected devices, ser is the serial object used to send values
     this.values = {}
+    this.teams = []
+    this.players = [] //this value is required, it is a list containing the ids of all participating players
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
@@ -15,25 +17,35 @@ class game{
           KILL: 0,
           TIMER: -1
         }
+        this.players.push(key)
       }
     })
-    this.intervalID = 0
+    this.intervalID = 0 //required, do not touch
     this.ser = ser
-    this.ser.write(encodeMessage("gamestate",1))
-    this.ser.write(encodeMessages("color",[0,0,255]))
+    this.colors = [
+      {name:"Red", rgb:[255,0,0]},
+      {name:"Green", rgb:[0,255,0]},
+      {name:"Blue", rgb:[0,0,255]},
+      {name:"Yellow",rgb:[255,255,0]},
+      {name:"Purple",rgb:[255,0,255]},
+      {name:"Cyan",rgb:[0,255,255]},
+      {name:"Yellow",rgb:[255,128,0]}
+    ]
   }
-  init(){
+  init(){//required function, gets called when the gamemode gets selected
+    this.ser.write(encodeMessage("gamestate",1))
+    this.ser.write(encodeMessages("color",[255,255,255]))
     Object.entries(this.values).forEach(([key, value]) =>{
       this.ser.write(encodeMessages("vars",[value.HP, value.MHP, value.SP, value.MSP, value.ATK, value.RT, value.PTS, value.KILL],key))
     })
   }
-  start(){
+  start(){//requirede function, gets called when the game starts
     this.ser.write(encodeMessage("gamestate",2))
     Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
       value.TIMER = 1
     })
   }
-  tick(){
+  tick(){//required function, gets called every 0.5s while game is running
     Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
       if(value.TIMER>0){
         value.TIMER-=1
@@ -50,15 +62,22 @@ class game{
       this.ser.write(encodeMessages("vars",[value.HP, value.MHP, value.SP, value.MSP, value.ATK, value.RT, value.PTS, value.KILL],key))
     })
   }
-  hit(sendID, recieveID){
-    this.values[recieveID].HP -= this.values[sendID].ATK
-    // this.ser.write(encodeMessages("vars",[this.values[recieveID].HP, this.values[recieveID].MHP, this.values[recieveID].SP, this.values[recieveID].MSP, this.values[recieveID].ATK, this.values[recieveID].RT, this.values[recieveID].PTS, this.values[recieveID].KILL],key))
-    // this.ser.write(encodeMessages("vars",[this.values[sendID].HP, this.values[sendID].MHP, this.values[sendID].SP, this.values[sendID].MSP, this.values[sendID].ATK, this.values[sendID].RT, this.values[sendID].PTS, this.values[sendID].KILL],key))
+  hit(sendID, recieveID){//required function, gets called when a player is hit, sendID is the ID of the player who has shot the player, recieveID is the ID of the player who has been shot
+    if(this.teams[sendID] != this.teams[recieveID]){
+      this.values[recieveID].HP -= this.values[sendID].ATK
+    }
   }
-  stop(){
-    this.ser.write(encodeMessage("gamestate",0))
+  stop(){//required function, gets called when the game has been stopped
+    this.ser.write(encodeMessage("gamestate",1))
   }
-
+  setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
+    this.teams = teams;
+    log.debug(teams)
+    for(i of this.players) {
+      log.debug(i)
+      this.ser.write(encodeMessages("color",this.colors[teams[i].team].rgb, i))
+    }
+  }
 }
 
 function encodeMessage(type, message, id){

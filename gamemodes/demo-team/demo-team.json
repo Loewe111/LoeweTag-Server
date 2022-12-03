@@ -1,0 +1,7 @@
+{
+    "name":"Team Demo",
+    "description":"A Demo Gamemode to test the Lastertag System. A Team Game adjustable Teams",
+    "version":1,
+    "versionString": "v0.1",
+    "hasTeams": true
+}

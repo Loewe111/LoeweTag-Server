@@ -1,6 +1,18 @@
 {
-    "demo": {
-        "path":"/demo/demo.js",
-        "info":"/demo/demo.json"
+    "demo-solo": {
+        "path":"/demo-solo/demo-solo.js",
+        "info":"/demo-solo/demo-solo.json"
+    },
+    "demo-team": {
+        "path":"/demo-team/demo-team.js",
+        "info":"/demo-team/demo-team.json"
+    },
+    "hardcore": {
+        "path":"/hardcore/hardcore.js",
+        "info":"/hardcore/hardcore.json"
+    },
+    "revive": {
+        "path":"/revive/revive.js",
+        "info":"/revive/revive.json"
     }
 }
