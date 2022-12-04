@@ -1,7 +1,7 @@
 {
   "name": "loewetag-client",
-  "version": "0.0.1",
-  "description": "A GUI and Server for the LoeweTag project.",
+  "version": "0.1.0",
+  "description": "A GUI and Server for the LoeweTag project. The GUI is written in Electron and the server in Node.js. The server is used to communicate with the LoeweTag hardware. The GUI is used to configure the LoeweTag hardware and to display the current status of the LoeweTag hardware. Gamemodes can be added to extend the functionality of the LoeweTag hardware.",
   "main": "main.js",
   "scripts": {
     "test": "electron ."
