@@ -120,6 +120,7 @@ function handleIpc(){ //Setup IPC-main handlers
       Object.entries(gamemode.values).forEach(([key, value]) => {
         buf[key] = value.PTS
       });
+      return buf
     }else{
       return []
     }
