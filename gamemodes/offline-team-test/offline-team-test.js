@@ -1,10 +1,10 @@
 class game{
   constructor(devices, ser){//devices is the object containing all connected devices, ser is the serial object used to send values
     this.values = {}
-    this.teams = []
+    this.teams = {}
     this.players = [] //this value is required, it is a list containing the ids of all participating players
-    //generate values for 15 players with id 0-14, 3 players per team, random Points and Kills
-    for(i=0;i<15;i++){
+    //generate values for 15 players with id 0-14 random Points and Kills
+    for(var i=0;i<15;i++){
       this.values[i] = {
         HP: 30,
         MHP: 30,
@@ -19,7 +19,7 @@ class game{
       }
       this.players.push(i)
     }
-    
+
     this.intervalID = 0 //required, do not touch
     this.ser = ser
     this.colors = [
@@ -50,10 +50,7 @@ class game{
   setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
     this.teams = teams;
     log.debug(teams)
-    for(i of this.players) {
-      log.debug(i)
-      this.ser.write(encodeMessages("color",this.colors[teams[i].team].rgb, i))
-    }
+    
   }
 }
 
