@@ -89,8 +89,7 @@ async function refreshTeamTable(){
 }
 
 async function setTeam(team, id){
-  teams[id] = {}
-  teams[id].team = team
+  teams[id] = team
   document.getElementById("button-"+id).innerHTML = colors[team]
   console.log(teams)
 }

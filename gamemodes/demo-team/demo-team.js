@@ -75,7 +75,7 @@ class game{
     log.debug(teams)
     for(i of this.players) {
       log.debug(i)
-      this.ser.write(encodeMessages("color",this.colors[teams[i].team].rgb, i))
+      this.ser.write(encodeMessages("color",this.colors[teams[i]].rgb, i))
     }
   }
 }
