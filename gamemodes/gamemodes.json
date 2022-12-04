@@ -14,5 +14,9 @@
     "revive": {
         "path":"/revive/revive.js",
         "info":"/revive/revive.json"
+    },
+    "offline-team-test": {
+        "path":"/offline-team-test/offline-team-test.js",
+        "info":"/offline-team-test/offline-team-test.json"
     }
 }
