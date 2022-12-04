@@ -10,7 +10,8 @@ teamNames = {
 };
 
 function generateTeamLeaderboard(id, name, players) {
-  if(!players) return -1;
+  //return false if there are no players in the team
+  if (players.length == 0) return false;
   //Overall score
   parent = document.getElementById(id);
   headerDiv = document.createElement("div");
@@ -51,13 +52,47 @@ function generateTeamLeaderboard(id, name, players) {
 
   //show the leaderboard
   parent.classList.remove("hidden");
+  return true; //return true if the leaderboard is displayed
 }
 
-// test all teams with random scores
-Object.entries(teamNames).forEach(([id, name]) => {
-  generateTeamLeaderboard(id, name, [
-    { name: "Player 1", score: Math.floor(Math.random() * 100) },
-    { name: "Player 2", score: Math.floor(Math.random() * 100) },
-    { name: "Player 3", score: Math.floor(Math.random() * 100) },
-  ]);
-});
+
+//display the leaderboard
+function displayLeaderboard(scores, teams) {
+  //create an array of objects containing the player's name and score
+  var players = [];
+  for (player in scores) {
+    players.push({ name: player, score: scores[player] });
+  }
+
+  //create an array of objects containing the team id and the players in that team
+  var teamsArray = [];
+  for (team in teamNames) {
+    teamsArray.push({ id: team, players: [] });
+  }
+
+  //add the players to their respective teams
+  for (player in teams) {
+    teamsArray[teams[player]].players.push({
+      name: player,
+      score: scores[player],
+    });
+  }
+
+  //display the leaderboard
+  teamsArray.forEach((team) => {
+    generateTeamLeaderboard(team.id, teamNames[team.id], team.players);
+  });
+}
+
+//update the leaderboard
+async function updateLeaderboard() {
+  //get the scores from the server
+  var scores = await window.game.getScores();
+  //get the teams from the server
+  var teams = await window.game.getTeams();
+  //display the leaderboard
+  displayLeaderboard(scores, teams);
+}
+
+//update the leaderboard every second
+setInterval(updateLeaderboard, 1000);

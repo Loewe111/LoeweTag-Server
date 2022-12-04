@@ -105,6 +105,25 @@ function handleIpc(){ //Setup IPC-main handlers
       gamemode.setTeams(teams)
     }
   })
+
+  ipcMain.handle("game:getTeams", (event) => {
+    if(typeof gamemode !== 'undefined'){
+      return gamemode.teams
+    }else{
+      return []
+    }
+  })
+  
+  ipcMain.handle("game:getScores", (event) => {
+    if(typeof gamemode !== 'undefined'){
+      buf = {}
+      Object.entries(gamemode.values).forEach(([key, value]) => {
+        buf[key] = value.PTS
+      });
+    }else{
+      return []
+    }
+  })
 }
 
 
