@@ -1,7 +1,7 @@
 class game{ //the class needs to be called "game"
   constructor(devices, ser){//devices is the object containing all connected devices, ser is the serial object used to send values
     this.intervalID = 0; //required, do not touch
-    this.values = {};
+    this.values = {}; //required, stores all values of all players
     this.teams = [];
     this.players = []; //this value is required, it is a list containing the ids of all participating players
     Object.entries(devices).forEach(([key, value]) => {
