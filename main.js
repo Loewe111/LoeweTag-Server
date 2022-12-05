@@ -15,43 +15,43 @@ gamestate = {
 
 ser = NaN
 
-const createWindow = () => {
+const createWindow = () => { //Create window
   const win = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js') //Preload script
     },
-    icon:'icons/icon.png'
+    icon:'icons/icon.png' //Set icon
   })
 
-  win.loadFile('ui/index.html')
+  win.loadFile('ui/index.html') //Load UI
 
-  handleIpc()
+  handleIpc() //Setup IPC handlers
 }
 
 function handleIpc(){ //Setup IPC-main handlers
-  ipcMain.handle('devices:getDevices', ()=> {
+  ipcMain.handle('devices:getDevices', ()=> { //Get devices
     return devices
   })
 
-  ipcMain.handle("serial:getDevices", ()=> {
+  ipcMain.handle("serial:getDevices", ()=> { //Get serial devices
     return SerialPort.list()
   })
 
-  ipcMain.handle("serial:connectTo", (event, port)=> {
-    ser = new SerialPort({path: port, baudRate: 115200})
-    parser = new ReadlineParser()
-    ser.pipe(parser)
-    ser.write(".")
-    parser.on('data', handleSerial)
+  ipcMain.handle("serial:connectTo", (event, port)=> { //Connect to serial device
+    ser = new SerialPort({path: port, baudRate: 115200}) //Create serial port
+    parser = new ReadlineParser() //Create parser
+    ser.pipe(parser) //Pipe serial port to parser
+    ser.write(".") //Send initailization message
+    parser.on('data', handleSerial) //Setup parser data handler
   })
 
-  ipcMain.handle("serial:disconnect", (event, port)=> {
-    ser.close()
+  ipcMain.handle("serial:disconnect", (event, port)=> { //Disconnect from serial device
+    ser.close() //Close serial port
   })
 
-  ipcMain.handle("serial:getState", () => {
+  ipcMain.handle("serial:getState", () => { //Get serial state
     return{
       isOpen: ser.isOpen,
       path: ser.path,
@@ -59,55 +59,55 @@ function handleIpc(){ //Setup IPC-main handlers
     }
   })
 
-  ipcMain.handle("game:getGamemodes", () => {
+  ipcMain.handle("game:getGamemodes", () => { //Get gamemodes
     return gamemodesInfo
   })
   
-  ipcMain.handle("game:getState", () => {
+  ipcMain.handle("game:getState", () => { //Get gamestate
     return gamestate
   })
 
-  ipcMain.handle("game:selectGame", (event, gameid) => {
-    if(typeof gamemode !== 'undefined'){
+  ipcMain.handle("game:selectGame", (event, gameid) => { //Select gamemode
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, stop it
       gamemode.stop()
       gamestate.running = false
       clearInterval(gamemode.intervalID)
     }
-    gamemode = new gamemodes[gameid].game(devices, ser)
-    gamemode.init()
+    gamemode = new gamemodes[gameid].game(devices, ser) //Create gamemode
+    gamemode.init() //Initialize gamemode
     gamestate.gameid = gameid
   })
 
-  ipcMain.handle("game:startGame", () => {
+  ipcMain.handle("game:startGame", () => { //Start game
     gamemode.start()
     gamestate.running = true
-    gamemode.intervalID = setInterval(()=>{
+    gamemode.intervalID = setInterval(()=>{//Start gamemode interval
       gamemode.tick()
     }, 500) 
   })
 
-  ipcMain.handle("game:stopGame", () => {
+  ipcMain.handle("game:stopGame", () => { //Stop game
     gamemode.stop()
     gamestate.running = false
     clearInterval(gamemode.intervalID)
   })
 
-  ipcMain.handle("game:getPlayers", () => {
-    if(typeof gamemode !== 'undefined'){
+  ipcMain.handle("game:getPlayers", () => { //Get players
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, return players
       return gamemode.players
     }else{
       return []
     }
   })
 
-  ipcMain.handle("game:setTeams", (event, teams) => {
-    if(typeof gamemode !== 'undefined'){
+  ipcMain.handle("game:setTeams", (event, teams) => { //Set teams
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, set teams
       gamemode.setTeams(teams)
     }
   })
 
-  ipcMain.handle("game:getTeams", (event) => {
-    if(typeof gamemode !== 'undefined'){
+  ipcMain.handle("game:getTeams", (event) => { //Get teams
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, return teams
       return gamemode.teams
     }else{
       return []
@@ -115,7 +115,7 @@ function handleIpc(){ //Setup IPC-main handlers
   })
   
   ipcMain.handle("game:getScores", (event) => {
-    if(typeof gamemode !== 'undefined'){
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, return scores
       buf = {}
       Object.entries(gamemode.values).forEach(([key, value]) => {
         buf[key] = value.PTS
@@ -128,22 +128,22 @@ function handleIpc(){ //Setup IPC-main handlers
 }
 
 
-function handleSerial(data){
+function handleSerial(data){// Handle serial data
   data = data.replaceAll("'",'"') //Replace all ' with " for compability with old gun software
-  try {
+  try { //Try to parse data
     message = JSON.parse(data)
-  } catch (e) {
+  } catch (e) { //If parsing fails, log error and return
     log.error("Error while parsing data: '"+e+"', Original Input: "+data)
     return
   }
   log.debug(message)
-  if(message.type == "thisNode"){
+  if(message.type == "thisNode"){ //If message is a thisNode message, save it to devices as master
     devices[message.id] = {
       master: true,
       firmware: message.fw,
       type: "master"
     }
-  }else if(message.type == "connectionChange"){
+  }else if(message.type == "connectionChange"){ //If message is a connectionChange message, save it to devices
     Object.entries(devices).forEach(([key, value]) => {
       if(!value.master && !message.nodes.includes(key)){
         delete devices[key]
@@ -154,23 +154,23 @@ function handleSerial(data){
         devices[id] = {master: false}
       }
     })
-  }else if(message.type == "deviceInfo"){
+  }else if(message.type == "deviceInfo"){ //If message is a deviceInfo message, save it to devices
     devices[message.id].firmware = message.fw
     devices[message.id].type = message.deviceType
-  }else if(message.type == "request"){
-    if(message.request == "gamestate"){
+  }else if(message.type == "request"){ //If message is a request message, handle it
+    if(message.request == "gamestate"){//If request is gamestate, send gamestate
       ser.write(encodeMessage("gamestate",gamestate.state,message.from))
     }
-  }else if(message.type == "hit"){
-    if(typeof gamemode !== 'undefined'){
-      gamemode.hit(message.id, message.from)
+  }else if(message.type == "hit"){//If message is a hit message, handle it
+    if(typeof gamemode !== 'undefined'){//If gamemode is defined, handle hit
+      gamemode.hit(message.id, message.from)//Call gamemode hit function
     }
   }else{
-    log.warn("Unknown Message Type: "+message.type)
+    log.warn("Unknown Message Type: "+message.type)//If message type is unknown, log warning
   }
 }
 
-function encodeMessage(type, message, id){
+function encodeMessage(type, message, id){//Encode message
   if(id == NaN){
     buf = "@"+type+message+"\n"
   }else{
@@ -180,7 +180,7 @@ function encodeMessage(type, message, id){
   return buf
 }
 
-function encodeMessages(type, messages, id){
+function encodeMessages(type, messages, id){//Encode multiple messages
   if(id == undefined){
     buf = "@"+type
   }else{
@@ -199,11 +199,11 @@ gamemodes = {}
 gamemodesInfo = {}
 
 //Load gamemodes
-function loadGamemodes(pathString="gamemodes"){
-  plugins = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, "gamemodes.json")))
-  Object.entries(plugins).forEach(([key, value]) => {
-    info = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, value.info)))
-    gamemodes[key] = {
+function loadGamemodes(pathString="gamemodes"){//Load gamemodes from path
+  plugins = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, "gamemodes.json"))) //Read gamemodes.json
+  Object.entries(plugins).forEach(([key, value]) => { //For each gamemode
+    info = JSON.parse(fs.readFileSync(path.join(__dirname, pathString, value.info))) //Read info JSON file
+    gamemodes[key] = { //Add gamemode to gamemodes object
       game: require(path.join(__dirname, pathString, value.path)),
       name: info.name,
       description: info.description,
@@ -211,8 +211,8 @@ function loadGamemodes(pathString="gamemodes"){
       versionString: info.versionString,
       hasTeams: info.hasTeams
     }
-    gamemodesInfo[key] = {
-      name: info.name,
+    gamemodesInfo[key] = { //Add gamemode to gamemodesInfo object
+      name: info.name, 
       description: info.description,
       version: info.version,
       versionString: info.versionString,
