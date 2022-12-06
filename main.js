@@ -26,6 +26,7 @@ const createWindow = () => { //Create window
   })
 
   win.loadFile('ui/index.html') //Load UI
+  win.maximize() //Maximize window
 
   handleIpc() //Setup IPC handlers
 }
