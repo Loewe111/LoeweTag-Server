@@ -163,7 +163,7 @@ function handleSerial(data){// Handle serial data
       ser.write(encodeMessage("gamestate",gamestate.state,message.from))
     }
   }else if(message.type == "hit"){//If message is a hit message, handle it
-    if(typeof gamemode !== 'undefined'){//If gamemode is defined, handle hit
+    if(typeof gamemode !== 'undefined' && gamemode.players.includes(message.id)){//If gamemode is defined, handle hit
       gamemode.hit(message.id, message.from)//Call gamemode hit function
     }
   }else{
