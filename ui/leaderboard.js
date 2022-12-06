@@ -1,8 +1,8 @@
 //create an object containing the team ids and their names
 teamNames = {
   "team-red": "Team Red",
-  "team-blue": "Team Blue",
   "team-green": "Team Green",
+  "team-blue": "Team Blue",
   "team-yellow": "Team Yellow",
   "team-purple": "Team Purple",
   "team-cyan": "Team Cyan",
@@ -11,8 +11,8 @@ teamNames = {
 //create an object containing the team ids and their classes
 teamClasses = {
   "team-red": "bg-team-red",
-  "team-blue": "bg-team-blue",
   "team-green": "bg-team-green",
+  "team-blue": "bg-team-blue",
   "team-yellow": "bg-team-yellow",
   "team-purple": "bg-team-purple",
   "team-cyan": "bg-team-cyan",
