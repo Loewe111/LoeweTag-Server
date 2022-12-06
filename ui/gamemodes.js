@@ -137,9 +137,6 @@ async function start(){
   if(gamestate.running){
     window.game.stopGame()
   }else{
-    if(gamemodes[gamestate.gameid].hasTeams){
-      window.game.setTeams(teams)
-    }
     window.game.startGame()
   }
 }
