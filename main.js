@@ -10,7 +10,7 @@ const Link = require("./link.js") //Link class
 log = new Logging(4) //Create logger
 log.info("Starting up...") //Log startup
 
-const link = new Link() //Create link
+var link = new Link() //Create link
 
 devices = {}
 gamestate = {
@@ -50,7 +50,7 @@ function handleIpc(){ //Setup IPC-main handlers
     link = new Link(ser) //Create link
     parser = new ReadlineParser() //Create parser
     ser.pipe(parser) //Pipe serial port to parser
-    ser.write(".") //Send initailization message
+    ser.write("@init") //Send initailization message
     parser.on('data', handleSerial) //Setup parser data handler
     link = new Link(ser) //Create link
   })
