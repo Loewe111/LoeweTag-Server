@@ -11,7 +11,7 @@
  * Used to communicate with the devices
  * @param {serialport} ser - serialport object
  */
-class interface {
+class Link {
   constructor(ser) {
     this.ser = ser
   }
@@ -138,4 +138,4 @@ function encodeMessages(type, messages, id){
   return buf
 }
 
-module.exports = interface
+module.exports = Link
