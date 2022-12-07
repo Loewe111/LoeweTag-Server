@@ -25,7 +25,7 @@ class game{
     this.intervalID = 0
     this.link = link
     this.link.setGamestate(1)
-    this.link.setColors([0,0,255])
+    this.link.setColor([0,0,255])
   }
   init(){
     Object.entries(this.values).forEach(([key, value]) =>{
