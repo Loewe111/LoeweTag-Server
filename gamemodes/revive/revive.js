@@ -36,7 +36,7 @@ class game{
     this.link.setGamestate(1)
     this.link.setColor([255,255,255])
     Object.entries(this.values).forEach(([id, value]) =>{
-      this.link.setValues(value, key)
+      this.link.setValues(value, id)
     })
   }
   start(){//requirede function, gets called when the game starts

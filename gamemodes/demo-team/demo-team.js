@@ -41,12 +41,12 @@ class game{
   }
   start(){//requirede function, gets called when the game starts
     this.link.setGamestate(2)
-    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       value.TIMER = 1
     })
   }
   tick(){//required function, gets called every 0.5s while game is running
-    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       if(value.TIMER>0){
         value.TIMER-=1
       }

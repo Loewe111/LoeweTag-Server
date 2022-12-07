@@ -28,18 +28,18 @@ class game{
     this.link.setColor([0,0,255])
   }
   init(){
-    Object.entries(this.values).forEach(([key, value]) =>{
-      this.link.setValues(value, key)
+    Object.entries(this.values).forEach(([id, value]) =>{
+      this.link.setValues(value, id)
     })
   }
   start(){
     this.link.setGamestate(2)
-    Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       value.TIMER = 1
     })
   }
   tick(){
-    Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       if(value.TIMER>0){
         value.TIMER-=1
       }
@@ -52,7 +52,7 @@ class game{
         value.TIMER = value.RT
         value.ATK = 0
       }
-      this.link.setValues(value, key)
+      this.link.setValues(value, id)
     })
   }
   hit(sendID, recieveID){
