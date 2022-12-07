@@ -52,26 +52,4 @@ class game{ //the class needs to be called "game"
   }
 }
 
-function encodeMessage(type, message, id){  //used to encode a message to send to every or a specific device
-  if(id == undefined){
-    buf = "@"+type+message+"\n"
-  }else{
-    buf = id+"@"+type+message+"\n"
-  }
-  return buf
-}
-
-function encodeMessages(type, messages, id){ //used to encode multiple messages to send to every or a specific device
-  if(id == undefined){
-    buf = "@"+type
-  }else{
-    buf = id+"@"+type
-  }
-  for(i of messages){
-    buf = buf + i + "#"
-  }
-  buf = buf.slice(0, -1)+"\n"
-  return buf
-}
-
 module.exports = game;
