@@ -7,12 +7,12 @@ class game{ //the class needs to be called "game"
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
-          HP: 60,
-          MHP: 60,
+          HP: 100,
+          MHP: 100,
           SP: 50,
           MSP: 100,
           ATK: 0,
-          MATK: 10,
+          MATK: 50,
           RT: 10,
           PTS: 0,
           KILL: 0,
@@ -37,7 +37,6 @@ class game{ //the class needs to be called "game"
     this.link.setColor([0,255,0])
     Object.entries(this.values).forEach(([id, value]) =>{
       this.link.setValues(value, id)
-      this.link.setValues(value, id)
     })
   }
   start(){//requirede function, gets called when the game starts
@@ -60,6 +59,7 @@ class game{ //the class needs to be called "game"
       this.values[recieveID].HP = 0
       this.values[sendID].PTS += 20
       this.values[sendID].KILL += 1
+      this.link.setValues(this.values[recieveID], recieveID)
       this.link.setColor([255,0,0], recieveID)
     }
   }

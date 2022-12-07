@@ -1,6 +1,6 @@
 {
   "name":"Hardcore",
-  "description":"Players need 6 hits to die and when you die, you cant respawn! No Teams",
+  "description":"Players need 2 hits to die and when they die, they cant respawn! No Teams",
   "version":1,
   "versionString": "v0.1",
   "hasTeams": false
