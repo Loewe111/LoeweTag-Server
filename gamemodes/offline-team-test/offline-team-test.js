@@ -1,5 +1,5 @@
 class game{
-  constructor(devices, ser){//devices is the object containing all connected devices, ser is the serial object used to send values
+  constructor(devices, link){//devices is the object containing all connected devices, link is the link object used to set values
     this.values = {}
     this.teams = {}
     this.players = [] //this value is required, it is a list containing the ids of all participating players
@@ -21,7 +21,7 @@ class game{
     }
 
     this.intervalID = 0 //required, do not touch
-    this.ser = ser
+    this.link = link
     this.colors = [
       {name:"Red", rgb:[255,0,0]},
       {name:"Green", rgb:[0,255,0]},
@@ -49,31 +49,7 @@ class game{
   }
   setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
     this.teams = teams;
-    log.debug(teams)
-    
   }
-}
-
-function encodeMessage(type, message, id){
-  if(id == undefined){
-    buf = "@"+type+message+"\n"
-  }else{
-    buf = id+"@"+type+message+"\n"
-  }
-  return buf
-}
-
-function encodeMessages(type, messages, id){
-  if(id == undefined){
-    buf = "@"+type
-  }else{
-    buf = id+"@"+type
-  }
-  for(i of messages){
-    buf = buf + i + "#"
-  }
-  buf = buf.slice(0, -1)+"\n"
-  return buf
 }
 
 module.exports = game;

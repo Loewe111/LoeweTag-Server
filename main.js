@@ -2,10 +2,15 @@ const { app, BrowserWindow, ipcMain} = require('electron')
 const path = require('path')
 const { SerialPort } = require('serialport')
 const { ReadlineParser } = require('@serialport/parser-readline')
-const Logging = require("./logging.js")
 const fs = require("fs")
 
-log = new Logging(4)
+const Logging = require("./logging.js") //Logging class
+const Link = require("./link.js") //Link class
+
+log = new Logging(4) //Create logger
+log.info("Starting up...") //Log startup
+
+const link = new Link() //Create link
 
 devices = {}
 gamestate = {
@@ -42,10 +47,12 @@ function handleIpc(){ //Setup IPC-main handlers
 
   ipcMain.handle("serial:connectTo", (event, port)=> { //Connect to serial device
     ser = new SerialPort({path: port, baudRate: 115200}) //Create serial port
+    link = new Link(ser) //Create link
     parser = new ReadlineParser() //Create parser
     ser.pipe(parser) //Pipe serial port to parser
     ser.write(".") //Send initailization message
     parser.on('data', handleSerial) //Setup parser data handler
+    link = new Link(ser) //Create link
   })
 
   ipcMain.handle("serial:disconnect", (event, port)=> { //Disconnect from serial device
@@ -74,7 +81,7 @@ function handleIpc(){ //Setup IPC-main handlers
       gamestate.running = false
       clearInterval(gamemode.intervalID)
     }
-    gamemode = new gamemodes[gameid].game(devices, ser) //Create gamemode
+    gamemode = new gamemodes[gameid].game(devices, link) //Create gamemode
     gamemode.init() //Initialize gamemode
     gamestate.gameid = gameid
   })
@@ -160,7 +167,7 @@ function handleSerial(data){// Handle serial data
     devices[message.id].type = message.deviceType
   }else if(message.type == "request"){ //If message is a request message, handle it
     if(message.request == "gamestate"){//If request is gamestate, send gamestate
-      ser.write(encodeMessage("gamestate",gamestate.state,message.from))
+      link.setGamestate(gamestate.state, message.from)
     }
   }else if(message.type == "hit"){//If message is a hit message, handle it
     if(typeof gamemode !== 'undefined' && gamemode.players.includes(message.id)){//If gamemode is defined, handle hit

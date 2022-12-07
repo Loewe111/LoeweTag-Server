@@ -1,5 +1,5 @@
 class game{
-  constructor(devices, ser){//devices is the object containing all connected devices, ser is the serial object used to send values
+  constructor(devices, link){//devices is the object containing all connected devices, link is the link object used to set values
     this.values = {}
     this.teams = []
     this.players = [] //this value is required, it is a list containing the ids of all participating players
@@ -21,7 +21,7 @@ class game{
       }
     })
     this.intervalID = 0 //required, do not touch
-    this.ser = ser
+    this.link = link
     this.colors = [
       {name:"Red", rgb:[255,0,0]},
       {name:"Green", rgb:[0,255,0]},
@@ -33,20 +33,20 @@ class game{
     ]
   }
   init(){//required function, gets called when the gamemode gets selected
-    this.ser.write(encodeMessage("gamestate",1))
-    this.ser.write(encodeMessages("color",[255,255,255]))
-    Object.entries(this.values).forEach(([key, value]) =>{
-      this.ser.write(encodeMessages("vars",[value.HP, value.MHP, value.SP, value.MSP, value.ATK, value.RT, value.PTS, value.KILL],key))
+    this.link.setGamestate(1)
+    this.link.setColor([255,255,255])
+    Object.entries(this.values).forEach(([id, value]) =>{
+      this.link.setValues(value, key)
     })
   }
   start(){//requirede function, gets called when the game starts
-    this.ser.write(encodeMessage("gamestate",2))
-    Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    this.link.setGamestate(2)
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       value.TIMER = 1
     })
   }
   tick(){//required function, gets called every 0.5s while game is running
-    Object.entries(this.values).forEach(([key, value]) =>{//Iterate over all Player, key->player id, value-> object with values
+    Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
       if(value.TIMER>0){
         value.TIMER-=1
       }
@@ -59,7 +59,7 @@ class game{
         value.TIMER = value.RT
         value.ATK = 0
       }
-      this.ser.write(encodeMessages("vars",[value.HP, value.MHP, value.SP, value.MSP, value.ATK, value.RT, value.PTS, value.KILL],key))
+      this.link.setValues(value, id)
     })
   }
   hit(sendID, recieveID){//required function, gets called when a player is hit, sendID is the ID of the player who has shot the player, recieveID is the ID of the player who has been shot
@@ -74,38 +74,15 @@ class game{
     }
   }
   stop(){//required function, gets called when the game has been stopped
-    this.ser.write(encodeMessage("gamestate",1))
+    this.link.setGamestate(1)
   }
   setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
     this.teams = teams;
-    log.debug(teams)
-    for(i of this.players) {
-      log.debug(i)
-      this.ser.write(encodeMessages("color",this.colors[teams[i]].rgb, i))
+    for(id of this.players) {
+      this.link.setColor(this.colors[teams[i]].rgb, id)
     }
   }
 }
 
-function encodeMessage(type, message, id){
-  if(id == undefined){
-    buf = "@"+type+message+"\n"
-  }else{
-    buf = id+"@"+type+message+"\n"
-  }
-  return buf
-}
-
-function encodeMessages(type, messages, id){
-  if(id == undefined){
-    buf = "@"+type
-  }else{
-    buf = id+"@"+type
-  }
-  for(i of messages){
-    buf = buf + i + "#"
-  }
-  buf = buf.slice(0, -1)+"\n"
-  return buf
-}
 
 module.exports = game;
