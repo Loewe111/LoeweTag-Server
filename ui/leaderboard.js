@@ -19,7 +19,7 @@ teamClasses = {
   "team-orange": "bg-team-orange",
 };
 
-function generateTeamLeaderboard(id, name, players) {
+function generateLeaderboard(id, name, players) {
   //return false if there are no players in the team
   if (players.length == 0) return false;
   //Overall score
@@ -125,31 +125,106 @@ function generateTeamsArray(scores, teams) {
   return teamsArray;
 }
 
+function generateScoresArray(scores) {
+  //create an array of objects containing the player's name and score
+  var players = [];
+  for (player in scores) {
+    players.push({ name: player, score: scores[player] });
+  }
+  //sort players by score
+  players.sort((a, b) => {
+    return b.score - a.score;
+  });
+  return players;
+}
+
+function displayLeaderboard(players){
+  //create div
+  var leaderboard = document.getElementById("leaderboard");
+  var parentDiv = document.createElement("div");
+  parentDiv.classList = "container d-flex justify-content-around";
+  var div = document.createElement("div");
+  div.classList = "container text-black rounded m-2 p-2 bg-team-none";
+  div.id = "team-none";
+
+  //sort players by score
+  players.sort((a, b) => {
+    return b.score - a.score;
+  });
+
+  //display the scores
+  players.forEach((player) => {
+    playerDiv = document.createElement("div");
+    playerDiv.classList = "d-flex justify-content-between mx-1";
+    playerName = document.createElement("h4");
+    playerName.innerHTML = player.name;
+    playerScore = document.createElement("h4");
+    playerScore.innerHTML = player.score;
+    playerDiv.appendChild(playerName);
+    playerDiv.appendChild(playerScore);
+    div.appendChild(playerDiv);
+  });
+
+  //clear leaderboard and put the div in the leaderboard
+  parentDiv.appendChild(div);
+  leaderboard.appendChild(parentDiv);
+  
+}
+
 //display the leaderboard
-function displayLeaderboard(teamsArray) {
+function displayTeamLeaderboard(teamsArray) {
   //display the leaderboard
   teamsArray.forEach((team) => {
-    generateTeamLeaderboard(team.id, teamNames[team.id], team.players);
+    generateLeaderboard(team.id, teamNames[team.id], team.players);
   });
 }
 
 //update the leaderboard
-async function updateLeaderboard() {
+async function updateTeamLeaderboard() {
   //get the scores from the server
   var scores = await window.game.getScores();
   //get the teams from the server
   var teams = await window.game.getTeams();
   //generate the teamsArray
   var teamsArray = generateTeamsArray(scores, teams);
-  //debug: log the teamsArray
-  console.log(teamsArray);
   //display the leaderboard
   createLeaderboardFields(teamsArray, 3);
-  displayLeaderboard(teamsArray);
+  displayTeamLeaderboard(teamsArray);
+}
+
+async function updateLeaderboard() {
+  //get the scores from the server
+  var scores = await window.game.getScores();
+  //generate the scoresArray
+  var players = generateScoresArray(scores);
+  //display the leaderboard
+  displayLeaderboard(players);
+}
+
+async function teamsEnabled() {
+  //get the gamestate from the server
+  var gamestate = await window.game.getState();
+  //get the gamemodes from the server
+  var gamemodes = await window.game.getGamemodes();
+  //get the current gamemode
+  var gamemode = gamemodes[gamestate.gameid];
+  //return true if teams are enabled
+  return gamemode.hasTeams;
+}
+
+async function main() {
+  //check if teams are enabled
+  if (await teamsEnabled()) {
+    //update the team leaderboard
+    await updateTeamLeaderboard();
+  } else {
+    //update the leaderboard
+    await updateLeaderboard();
+  }
 }
 
 //update the leaderboard every second
-setInterval(updateLeaderboard, 1000);
+// setInterval(main, 1000);
 
 //update the leaderboard once when the page loads
-updateLeaderboard();
+main();

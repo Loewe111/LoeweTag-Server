@@ -6,6 +6,7 @@
   --teamCyan: rgb(0, 255, 255);
   --teamPurple: rgb(255,0,255);
   --teamOrange: rgb(255,127,0);
+  --teamNone: rgb(255,255,255);
 }
 
 .bg-team-red{
@@ -28,6 +29,9 @@
 }
 .bg-team-orange{
   background-color: var(--teamOrange);
+}
+.bg-team-none{
+  background-color: var(--teamNone);
 }
 
 
