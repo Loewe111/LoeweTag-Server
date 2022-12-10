@@ -6,6 +6,7 @@
 class game{
   constructor(devices, link){
     this.values = {}
+    this.players = [] //this value is required, it is a list containing the ids of all participating players
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
@@ -20,6 +21,7 @@ class game{
           KILL: 0,
           TIMER: -1
         }
+        this.players.push(key)
       }
     })
     this.intervalID = 0
