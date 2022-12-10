@@ -72,8 +72,8 @@ class game{
   }
   setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
     this.teams = teams;
-    for(id of this.players) {
-      this.link.setColor(this.colors[teams[i]].rgb, id)
+    for(var id of this.players) {
+      this.link.setColor(this.colors[teams[id]].rgb, id)
     }
   }
 }
