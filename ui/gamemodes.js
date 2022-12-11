@@ -45,6 +45,7 @@ async function main(){
 
 async function setup(){
   gamemodes = await window.game.getGamemodes()
+  teams = await window.game.getTeams()
 
   div = document.getElementById("gamemodes")
   Object.entries(gamemodes).forEach(([key, value]) => { //List all available Gamemodes
@@ -81,7 +82,7 @@ async function refreshTeamTable(){
     row = table.insertRow(-1)
     row.insertCell(-1).innerHTML = i
     if(typeof teams[i] !== 'undefined'){
-      row.insertCell(-1).appendChild(getDropdown(colors[teams[i].team], colors, "setTeam", i))
+      row.insertCell(-1).appendChild(getDropdown(colors[teams[i]], colors, "setTeam", i))
     }else{
       row.insertCell(-1).appendChild(getDropdown("Color", colors, "setTeam", i))
     }
