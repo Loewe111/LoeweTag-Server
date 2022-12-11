@@ -10,6 +10,7 @@ async function setup(){
     document.getElementById("serial-connect").innerHTML = "DISCONNECT"
     document.getElementById("serial-connect").classList.remove("disabled")
   }
+  main()
 }
 
 async function main(){
@@ -61,11 +62,9 @@ async function connectSerial(){
   }
 }
 
-
 // const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 // Should not be used, but here if needed
 
-main()
 setup()
 setInterval(main, 1000)
 
