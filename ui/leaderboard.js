@@ -167,6 +167,7 @@ function displayLeaderboard(players){
 
   //clear leaderboard and put the div in the leaderboard
   parentDiv.appendChild(div);
+  leaderboard.innerHTML = "";
   leaderboard.appendChild(parentDiv);
   
 }
@@ -224,7 +225,7 @@ async function main() {
 }
 
 //update the leaderboard every second
-// setInterval(main, 1000);
+setInterval(main, 1000);
 
 //update the leaderboard once when the page loads
 main();
