@@ -27,6 +27,7 @@ const createWindow = () => { //Create window
     webPreferences: {
       preload: path.join(__dirname, 'preload.js') //Preload script
     },
+    autoHideMenuBar: true, //Hide menu bar
     icon:'icons/icon.png' //Set icon
   })
 
