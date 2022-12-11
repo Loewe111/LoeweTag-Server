@@ -46,6 +46,7 @@ async function main(){
 async function setup(){
   gamemodes = await window.game.getGamemodes()
   teams = await window.game.getTeams()
+  console.log(teams)
 
   div = document.getElementById("gamemodes")
   Object.entries(gamemodes).forEach(([key, value]) => { //List all available Gamemodes
