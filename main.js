@@ -46,6 +46,7 @@ function handleIpc(){ //Setup IPC-main handlers
   })
 
   ipcMain.handle("serial:connectTo", (event, port)=> { //Connect to serial device
+    devices = {} //Clear devices
     ser = new SerialPort({path: port, baudRate: 115200}) //Create serial port
     link = new Link(ser) //Create link
     parser = new ReadlineParser() //Create parser
