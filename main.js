@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain} = require('electron')
+const { app, BrowserWindow, ipcMain, dialog} = require('electron')
 const path = require('path')
 const { SerialPort } = require('serialport')
 const { ReadlineParser } = require('@serialport/parser-readline')
@@ -120,7 +120,7 @@ function handleIpc(){ //Setup IPC-main handlers
     if(typeof gamemode !== 'undefined'){ //If gamemode is defined, return teams
       return gamemode.teams
     }else{
-      return []
+      return {}
     }
   })
   
