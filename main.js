@@ -178,29 +178,6 @@ function handleSerial(data){// Handle serial data
   }
 }
 
-function encodeMessage(type, message, id){//Encode message
-  if(id == NaN){
-    buf = "@"+type+message+"\n"
-  }else{
-    buf = id+"@"+type+message+"\n"
-  }
-  log.debug(buf)
-  return buf
-}
-
-function encodeMessages(type, messages, id){//Encode multiple messages
-  if(id == undefined){
-    buf = "@"+type
-  }else{
-    buf = id+"@"+type
-  }
-  for(i in messages){
-    buf = buf + i + "#"
-  }
-  buf = buf.slice(0, -1)+"\n"
-  log.debug(buf)
-  return buf
-}
 
 //Gamemode Plugin System
 gamemodes = {}
