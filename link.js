@@ -70,7 +70,7 @@ class Link {
     //check if all values are set
     if(values.HP == undefined || values.MHP == undefined || values.SP == undefined || values.MSP == undefined || values.ATK == undefined || values.RT == undefined || values.PTS == undefined || values.KILL == undefined) return false;
 
-    this.ser.write(encodeMessage("vars", [values.HP, values.MHP, values.SP, values.MSP, values.ATK, values.RT, values.PTS, values.KILL], id)) // send values to serial
+    this.ser.write(encodeMessages("vars", [values.HP, values.MHP, values.SP, values.MSP, values.ATK, values.RT, values.PTS, values.KILL], id)) // send values to serial
     return true
   }
 

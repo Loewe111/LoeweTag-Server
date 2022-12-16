@@ -10,12 +10,11 @@ class game{
           MHP: 100,
           SP: 50,
           MSP: 100,
-          ATK: 0,
+          ATK: 100,
           MATK: 100,
           RT: 10,
           PTS: 0,
-          KILL: 0,
-          TIMER: -1
+          KILL: 0
         }
         this.players.push(key)
       }
@@ -47,18 +46,6 @@ class game{
   }
   tick(){//required function, gets called every 0.5s while game is running
     Object.entries(this.values).forEach(([id, value]) =>{//Iterate over all Player, id->player id, value-> object with values
-      if(value.TIMER>0){
-        value.TIMER-=1
-      }
-      if(value.TIMER==0){
-        value.ATK = value.MATK
-        value.HP = value.MHP
-        value.TIMER = -1
-      }
-      if(value.HP<=0 && value.TIMER < 0){
-        value.TIMER = value.RT
-        value.ATK = 0
-      }
       this.link.setValues(value, id)
     })
   }
@@ -78,8 +65,8 @@ class game{
   }
   setTeams(teams){//required if game has Teams, gets called when teams are set using the ui, teams contains an object with all teams
     this.teams = teams;
-    for(id of this.players) {
-      this.link.setColor(this.colors[teams[i]].rgb, id)
+    for(var id of this.players) {
+      this.link.setColor(this.colors[teams[id]].rgb, id)
     }
   }
 }
