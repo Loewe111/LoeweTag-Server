@@ -21,6 +21,8 @@ contextBridge.exposeInMainWorld('game', { //Expose game object to renderer
   setTeams: (teams) => ipcRenderer.invoke('game:setTeams',teams),
   getTeams: () => ipcRenderer.invoke('game:getTeams'),
   getScores: () => ipcRenderer.invoke('game:getScores'),
+  setSettings: (settings) => ipcRenderer.invoke('game:setSettings', settings),
+  getSettings: () => ipcRenderer.invoke('game:getSettings')
 })
 
 window.addEventListener('DOMContentLoaded', () => {

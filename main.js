@@ -135,6 +135,20 @@ function handleIpc(){ //Setup IPC-main handlers
       return []
     }
   })
+
+  ipcMain.handle("game:setSettings", (event) => {
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, set settings
+      gamemode.setSettings()
+    }
+  })
+
+  ipcMain.handle("game:getSettings", (event) => {
+    if(typeof gamemode !== 'undefined'){ //If gamemode is defined, return settings
+      return gamemode.settings
+    }else{
+      return []
+    }
+  })
 }
 
 
@@ -196,14 +210,18 @@ function loadGamemodes(pathString="gamemodes"){//Load gamemodes from path
       description: info.description,
       version: info.version,
       versionString: info.versionString,
-      hasTeams: info.hasTeams
+      hasTeams: info.hasTeams,
+      hasSettings: info.hasSettings,
+      settings: info.settings
     }
     gamemodesInfo[key] = { //Add gamemode to gamemodesInfo object
       name: info.name, 
       description: info.description,
       version: info.version,
       versionString: info.versionString,
-      hasTeams: info.hasTeams
+      hasTeams: info.hasTeams,
+      hasSettings: info.hasSettings,
+      settings: info.settings
     }
   })
 }

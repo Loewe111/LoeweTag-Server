@@ -33,6 +33,17 @@ async function main(){
       button2.onclick = new Function("refreshTeamTable()")
       title.appendChild(button2)
     }
+    if(gamemodes[gamestate.gameid].hasSettings){
+      button3 = document.createElement("button")
+      button3.classList = "btn tbn-lg btn-dark mx-1"
+      button3.style = "float: right"
+      button3.innerHTML = "SETTINGS"
+      button3.setAttribute("data-bs-toggle","modal")
+      button3.setAttribute("data-bs-target","#settings")
+      button3.onclick = new Function("refreshSettings()")
+      title.appendChild(button3)
+    }
+
 
     group.appendChild(description)
     group.appendChild(title)
@@ -88,6 +99,58 @@ async function refreshTeamTable(){
       row.insertCell(-1).appendChild(getDropdown("Color", colors, "setTeam", i))
     }
   }
+}
+
+async function refreshSettings(){
+  // values = await window.game.getSettings()
+  settings = gamemodes[gamestate.gameid].settings
+  displaySettings(settings)
+}
+
+async function displaySettings(settings, values){
+  if(values == undefined){
+    values = {}
+  }
+  table = document.getElementById("settings-table")
+  table.innerHTML = ""
+  Object.entries(settings).forEach(([key, value]) => {
+    row = table.insertRow(-1)
+    row.insertCell(-1).innerHTML = value.name
+    if(value.type == "number"){
+      input = document.createElement("input")
+      input.type = "number"
+      input.classList = "form-control"
+      input.id = "setting-"+key
+
+      if(values[key] != undefined){
+        input.value = values[key]
+      }
+      else{
+        input.value = value.default
+      }
+      group = document.createElement("div")
+      group.classList = "input-group"
+      unit = document.createElement("span")
+      unit.classList = "input-group-text"
+      unit.innerHTML = value.unit
+      group.appendChild(input)
+      group.appendChild(unit)
+      row.insertCell(-1).appendChild(group)
+    }else if(value.type == "boolean"){
+      input = document.createElement("input")
+      input.type = "checkbox"
+      input.classList = "form-check-input"
+      input.id = "setting-"+key
+
+      if(values[key] != undefined){
+        input.checked = values[key]
+      }
+      else{
+        input.checked = value.default
+      }
+      row.insertCell(-1).appendChild(input)
+    }
+  })
 }
 
 async function setTeam(team, id){
