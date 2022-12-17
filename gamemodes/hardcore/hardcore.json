@@ -1,8 +1,22 @@
 {
   "name":"Hardcore",
-  "description":"Players need 2 hits to die and when they die, they cant respawn! No Teams",
+  "description":" No Teams, no lights, no respawning! Pure hardcore survival! You glow red, when you are dead",
   "version":1,
-  "versionString": "v0.1",
+  "versionString": "v0.2",
   "hasTeams": false,
-  "hasSettings": false
+  "hasSettings": true,
+  "settings":{
+    "max-hp": {
+      "name": "Max HP",
+      "type": "number",
+      "default": 2,
+      "unit": "HP"
+    },
+    "attack-damage": {
+      "name": "Attack Damage",
+      "type": "number",
+      "default": 1,
+      "unit": "HP"
+    }
+  }
 }

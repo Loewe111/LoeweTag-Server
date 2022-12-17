@@ -7,16 +7,15 @@ class game{ //the class needs to be called "game"
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
-          HP: 100,
-          MHP: 100,
+          HP: 2,
+          MHP: 2,
           SP: 50,
           MSP: 100,
           ATK: 0,
-          MATK: 50,
+          MATK: 1,
           RT: 10,
           PTS: 0,
-          KILL: 0,
-          TIMER: -1
+          KILL: 0
         }
         this.players.push(key)
       }
@@ -65,6 +64,13 @@ class game{ //the class needs to be called "game"
   }
   stop(){//required function, gets called when the game has been stopped
     this.link.setGamestate(1)
+  }
+  setSettings(settings){//required if game has settings, gets called when settings are set using the ui, settings contains an object with all settings
+    this.settings = settings
+    Object.entries(this.values).forEach(([id, value]) =>{
+      value.MHP = settings["max-hp"]
+      value.MATK = settings["attack-damage"]
+    })
   }
 }
 
