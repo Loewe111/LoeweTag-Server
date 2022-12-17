@@ -57,7 +57,7 @@ class game{
         value.TIMER = -1
       }
       if(value.HP<=0 && value.TIMER < 0){
-        value.TIMER = value.RT
+        value.TIMER = this.respawnTime
         value.ATK = 0
       }
       this.link.setValues(value, id)
@@ -80,7 +80,7 @@ class game{
   }
   setSettings(settings){//required if game has settings, gets called when settings are set using the ui, settings contains an object with all settings
     this.settings = settings
-    this.respawnTime = settings["respawn-time"]*2
+    this.respawnTime = settings["respawn-time"] * 2
     Object.entries(this.values).forEach(([id, value]) =>{
       value.MHP = settings["max-hp"]
       value.MATK = settings["attack-damage"]
