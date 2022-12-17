@@ -6,18 +6,19 @@ class game{
     Object.entries(devices).forEach(([key, value]) => {
       if(value.type == "gun"){
         this.values[key] = {
-          HP: 100,
-          MHP: 100,
+          HP: 60,
+          MHP: 60,
           SP: 50,
           MSP: 100,
           ATK: 0,
-          MATK: 50,
-          RT: 10,
+          MATK: 10,
+          RT: 0,
           PTS: 0,
           KILL: 0,
           TIMER: -1
         }
         this.players.push(key)
+        this.respawnTime = 20
       }
     })
     this.intervalID = 0 //required, do not touch
@@ -76,6 +77,14 @@ class game{
     for(var id of this.players) {
       this.link.setColor(this.colors[teams[id]].rgb, id)
     }
+  }
+  setSettings(settings){//required if game has settings, gets called when settings are set using the ui, settings contains an object with all settings
+    this.settings = settings
+    this.respawnTime = settings["respawn-time"]*2
+    Object.entries(this.values).forEach(([id, value]) =>{
+      value.MHP = settings["max-hp"]
+      value.MATK = settings["attack-damage"]
+    })
   }
 }
 

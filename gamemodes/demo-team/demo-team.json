@@ -3,5 +3,26 @@
     "description":"A Demo Gamemode to test the Lastertag System. A Team Game adjustable Teams",
     "version":1,
     "versionString": "v0.1",
-    "hasTeams": true
+    "hasTeams": true,
+    "hasSettings": true,
+    "settings": {
+        "max-hp": {
+            "name": "Max HP",
+            "type": "number",
+            "default": 60,
+            "unit": "HP"
+        },
+        "attack-damage": {
+            "name": "Attack Damage",
+            "type": "number",
+            "default": 10,
+            "unit": "HP"
+        },
+        "respawn-time": {
+            "name": "Respawn Time",
+            "type": "number",
+            "default": 5,
+            "unit": "s"
+        }
+    }
 }
