@@ -3,5 +3,6 @@
     "description":"Revive Dead Players in your team, if all players in your team die, your team is out! Players die after beeing hit once",
     "version":1, 
     "versionString": "v1.0",
-    "hasTeams": true
+    "hasTeams": true,
+    "hasSettings": false
 }

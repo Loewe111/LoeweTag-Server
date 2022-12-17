@@ -3,5 +3,6 @@
     "description":"Used to test the software without the devices",
     "version":1,
     "versionString": "v0.1",
-    "hasTeams": true
+    "hasTeams": true,
+    "hasSettings": false
 }

@@ -3,5 +3,6 @@
     "description":"Dolor Sit Amet",
     "version":1,
     "versionString": "v1",
-    "hasTeams": true
+    "hasTeams": true,
+    "hasSettings": false
 }

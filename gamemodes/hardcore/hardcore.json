@@ -3,5 +3,6 @@
   "description":"Players need 2 hits to die and when they die, they cant respawn! No Teams",
   "version":1,
   "versionString": "v0.1",
-  "hasTeams": false
+  "hasTeams": false,
+  "hasSettings": false
 }
