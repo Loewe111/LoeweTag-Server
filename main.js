@@ -136,9 +136,9 @@ function handleIpc(){ //Setup IPC-main handlers
     }
   })
 
-  ipcMain.handle("game:setSettings", (event) => {
+  ipcMain.handle("game:setSettings", (event, settings) => {
     if(typeof gamemode !== 'undefined'){ //If gamemode is defined, set settings
-      gamemode.setSettings()
+      gamemode.setSettings(settings)
     }
   })
 
