@@ -53,11 +53,9 @@ async function main(){
 
 }
 
-
 async function setup(){
   gamemodes = await window.game.getGamemodes()
   teams = await window.game.getTeams()
-  console.log(teams)
 
   div = document.getElementById("gamemodes")
   Object.entries(gamemodes).forEach(([key, value]) => { //List all available Gamemodes
@@ -102,9 +100,9 @@ async function refreshTeamTable(){
 }
 
 async function refreshSettings(){
-  // values = await window.game.getSettings()
+  values = await window.game.getSettings()
   settings = gamemodes[gamestate.gameid].settings
-  displaySettings(settings)
+  displaySettings(settings, values)
 }
 
 async function displaySettings(settings, values){
@@ -156,7 +154,6 @@ async function displaySettings(settings, values){
 async function setTeam(team, id){
   teams[id] = team
   document.getElementById("button-"+id).innerHTML = colors[team]
-  console.log(teams)
 }
 
 function getDropdown(buttonString, elements, functionString, parameter){ //function to create dropdown
@@ -188,6 +185,19 @@ function getDropdown(buttonString, elements, functionString, parameter){ //funct
   mainDiv.appendChild(button)
   mainDiv.appendChild(list)
   return mainDiv
+}
+
+async function confirmSettings(){
+  settings = gamemodes[gamestate.gameid].settings
+  values = {}
+  Object.entries(settings).forEach(([key, value]) => {
+    if(value.type == "number"){
+      values[key] = document.getElementById("setting-"+key).value
+    }else if(value.type == "boolean"){
+      values[key] = document.getElementById("setting-"+key).checked
+    }
+  })
+  window.game.setSettings(values)
 }
 
 async function confirmTeams(){
