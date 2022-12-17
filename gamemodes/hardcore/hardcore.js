@@ -34,7 +34,7 @@ class game{ //the class needs to be called "game"
   }
   init(){//required function, gets called when the gamemode gets selected
     this.link.setGamestate(1)
-    this.link.setColor([0,255,0])
+    this.link.setColor([0,0,0])
     Object.entries(this.values).forEach(([id, value]) =>{
       this.link.setValues(value, id)
     })
