@@ -84,7 +84,7 @@ function createLeaderboardFields(teamsArray, MAX_COLUMNS) {
   var columnsLeft = 0; //number of columns left to fill
   //display the teams in the leaderboard
   Object.values(divs).forEach((team) => {
-    if(columnsLeft == 0){
+    if (columnsLeft == 0) {
       //create a new row
       row = document.createElement("div");
       row.classList = "container d-flex justify-content-around";
@@ -138,7 +138,7 @@ function generateScoresArray(scores) {
   return players;
 }
 
-function displayLeaderboard(players){
+function displayLeaderboard(players) {
   //create div
   var leaderboard = document.getElementById("leaderboard");
   var parentDiv = document.createElement("div");
@@ -169,7 +169,6 @@ function displayLeaderboard(players){
   parentDiv.appendChild(div);
   leaderboard.innerHTML = "";
   leaderboard.appendChild(parentDiv);
-  
 }
 
 //display the leaderboard
