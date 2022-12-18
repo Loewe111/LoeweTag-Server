@@ -26,6 +26,7 @@ contextBridge.exposeInMainWorld("game", {
   getScores: () => ipcRenderer.invoke("game:getScores"),
   setSettings: (settings) => ipcRenderer.invoke("game:setSettings", settings),
   getSettings: () => ipcRenderer.invoke("game:getSettings"),
+  toggleLeaderboardWindow: () => ipcRenderer.invoke("game:toggleLeaderboardWindow")
 });
 
 window.addEventListener("DOMContentLoaded", () => {

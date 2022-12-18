@@ -20,6 +20,28 @@ gamestate = {
 
 ser = NaN;
 
+var leaderboardOpen = false;
+
+function toggleLeaderboardWindow() {
+  if (!leaderboardOpen) {
+    leaderboardWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"), //Preload script
+      },
+      autoHideMenuBar: true, //Hide menu bar
+      icon: "icons/icon.png", //Set icon
+    });
+    leaderboardWindow.loadFile("ui/leaderboard-fullscreen.html"); //Load UI
+    leaderboardOpen = true;
+  } else {
+    //Close window
+    leaderboardWindow.close();
+    leaderboardOpen = false;
+  }
+}
+
 function createWindow() {
   //Create window
   const win = new BrowserWindow({
@@ -171,6 +193,11 @@ function handleIpc() {
     } else {
       return [];
     }
+  });
+
+  ipcMain.handle("game:toggleLeaderboardWindow", () => {
+    //Toggle leaderboard window
+    toggleLeaderboardWindow();
   });
 }
 
