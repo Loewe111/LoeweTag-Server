@@ -4,8 +4,8 @@ const { SerialPort } = require("serialport");
 const { ReadlineParser } = require("@serialport/parser-readline");
 const fs = require("fs");
 
-const Logging = require("./logging.js"); //Logging class
-const Link = require("./link.js"); //Link class
+const Logging = require("./libs/logging"); //Logging class
+const Link = require("./libs/link"); //Link class
 
 log = new Logging(4); //Create logger
 log.info("Starting up..."); //Log startup
