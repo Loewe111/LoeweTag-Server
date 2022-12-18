@@ -23,6 +23,11 @@
             "type": "number",
             "default": 5,
             "unit": "s"
+        },
+        "friendly-fire": {
+            "name": "Friendly Fire",
+            "type": "boolean",
+            "default": false
         }
     }
 }

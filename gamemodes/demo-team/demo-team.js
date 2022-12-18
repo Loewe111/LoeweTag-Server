@@ -71,7 +71,7 @@ class game {
   }
   hit(sendID, recieveID) {
     //required function, gets called when a player is hit, sendID is the ID of the player who has shot the player, recieveID is the ID of the player who has been shot
-    if (this.teams[sendID] != this.teams[recieveID]) {
+    if (this.teams[sendID] != this.teams[recieveID] || this.friendlyFire) {
       this.values[recieveID].HP -= this.values[sendID].ATK;
       this.values[sendID].PTS += 15;
     }
@@ -91,6 +91,7 @@ class game {
     //required if game has settings, gets called when settings are set using the ui, settings contains an object with all settings
     this.settings = settings;
     this.respawnTime = settings["respawn-time"] * 2;
+    this.friendlyFire = settings["friendly-fire"];
     Object.entries(this.values).forEach(([id, value]) => {
       value.MHP = settings["max-hp"];
       value.MATK = settings["attack-damage"];
