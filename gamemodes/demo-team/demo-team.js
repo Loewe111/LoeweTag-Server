@@ -19,9 +19,10 @@ class game {
           TIMER: -1,
         };
         this.players.push(key);
-        this.respawnTime = 20;
       }
     });
+    this.respawnTime = 20;
+    this.friendlyFire = false;
     this.intervalID = 0; //required, do not touch
     this.link = link;
     this.colors = [
