@@ -213,6 +213,15 @@ async function teamsEnabled() {
 }
 
 async function main() {
+  //check if the game is running
+  if ((await window.game.getState()).gameid == undefined) {
+    //show message
+    document.getElementById("message").classList.remove("hidden");
+    return;
+  } else {
+    //hide message
+    document.getElementById("message").classList.add("hidden");
+  }
   //check if teams are enabled
   if (await teamsEnabled()) {
     //update the team leaderboard
