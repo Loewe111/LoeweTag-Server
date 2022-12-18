@@ -3,7 +3,7 @@
  * @author Loewe_111
  * @version 1.0.0
  * @license MIT
- * @module interface
+ * @module link
  */
 
 /**

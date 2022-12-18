@@ -1,12 +1,23 @@
-// Module for logging
+/**
+ * @fileoverview Logging module
+ * @author Loewe_111
+ * @version 1.0.0
+ * @license MIT
+ * @module logging
+ */
 
-// Logging Levels:
-// 4: DEBUG, INFO, WARN, ERROR
-// 3: INFO, WARN, ERROR
-// 2: WARN, ERROR
-// 1: ERROR
-// 0: DISABLED
-
+/**
+ * Logging class
+ * @param {int} level - Logging level
+ * @returns {Logging} - Logging class
+ * @example
+ * //Logging levels:
+ * //4: DEBUG, INFO, WARN, ERROR
+ * //3: INFO, WARN, ERROR
+ * //2: WARN, ERROR
+ * //1: ERROR
+ * //0: DISABLED
+ */
 class Logging {
   constructor(level) {
     this.level = level;
