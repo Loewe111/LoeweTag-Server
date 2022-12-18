@@ -20,7 +20,7 @@ gamestate = {
 
 ser = NaN;
 
-const createWindow = () => {
+function createWindow() {
   //Create window
   const win = new BrowserWindow({
     width: 800,
@@ -36,7 +36,7 @@ const createWindow = () => {
   win.maximize(); //Maximize window
 
   handleIpc(); //Setup IPC handlers
-};
+}
 
 function handleIpc() {
   //Setup IPC-main handlers
@@ -229,24 +229,22 @@ function handleSerial(data) {
   }
 }
 
-//Gamemode Plugin System
-gamemodes = {};
-gamemodesInfo = {};
-
 //Load gamemodes
 function loadGamemodes(pathString = "gamemodes") {
+  gamemodes = {};
+  gamemodesInfo = {};
   //Load gamemodes from path
   plugins = JSON.parse(
     fs.readFileSync(path.join(__dirname, pathString, "gamemodes.json"))
   ); //Read gamemodes.json
-  Object.entries(plugins).forEach(([key, value]) => {
+  Object.entries(plugins).forEach(([name, plugin]) => {
     //For each gamemode
     info = JSON.parse(
-      fs.readFileSync(path.join(__dirname, pathString, value.info))
+      fs.readFileSync(path.join(__dirname, pathString, plugin.info))
     ); //Read info JSON file
-    gamemodes[key] = {
+    gamemodes[name] = {
       //Add gamemode to gamemodes object
-      game: require(path.join(__dirname, pathString, value.path)),
+      game: require(path.join(__dirname, pathString, plugin.path)),
       name: info.name,
       description: info.description,
       version: info.version,
@@ -255,7 +253,7 @@ function loadGamemodes(pathString = "gamemodes") {
       hasSettings: info.hasSettings,
       settings: info.settings,
     };
-    gamemodesInfo[key] = {
+    gamemodesInfo[name] = {
       //Add gamemode to gamemodesInfo object
       name: info.name,
       description: info.description,
@@ -268,14 +266,14 @@ function loadGamemodes(pathString = "gamemodes") {
   });
 }
 
-loadGamemodes();
 //Init Code
+loadGamemodes();
 
 app.whenReady().then(() => {
   createWindow();
 });
 
 app.on("window-all-closed", () => {
-  console.error("Closing App");
+  log.info("Quitting...");
   app.quit(); //Quit app when window is closed
 });
