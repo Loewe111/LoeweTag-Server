@@ -35,6 +35,9 @@ function toggleLeaderboardWindow() {
     });
     leaderboardWindow.loadFile("ui/leaderboard-fullscreen.html"); //Load UI
     leaderboardOpen = true;
+    leaderboardWindow.on("closed", () => {
+      leaderboardOpen = false;
+    });
   } else {
     //Close window
     leaderboardWindow.close();
