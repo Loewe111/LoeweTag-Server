@@ -9,7 +9,7 @@
   "author": "Loewe_111",
   "license": "MIT",
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0",
+    "electron": "^23.1.4",
     "serialport": "^10.4.0"
   }
 }
