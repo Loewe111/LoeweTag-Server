@@ -230,7 +230,7 @@ function handleSerial(data) {
         };
       }
     }
-  } else if (message.type == "deviceInfo") {
+  } else if (message.type == "device_information") {
     //If message is a deviceInfo message, save it to devices
     devices[message.ip].firmware = message.firmware;
     devices[message.ip].type = message.device_type;
