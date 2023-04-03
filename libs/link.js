@@ -103,13 +103,25 @@ class Link {
   }
 
   /**
-   * Get Connected Devices
+   * Request Connected Devices
    */
   getDevices() {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
     this.ser.write(JSON.stringify({
       type: "get_devices"
     }) + "\n"); // send get_devices command to serial
+    return true;
+  }
+
+  /**
+   * Request device info
+   */
+  getInformation() {
+    if (!this.checkSerial()) return false; // check if serial is connected, if not return false
+    this.ser.write(JSON.stringify({
+      type: "information"
+    }) + "\n"); // send get_info command to serial
+    return true;
   }
 }
 
