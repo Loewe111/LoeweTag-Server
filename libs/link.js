@@ -50,7 +50,7 @@ class Link {
   setGamestate(state, ip) {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
     ip = getIP(ip);
-    this.ser.write(encodeMessages(ip, {
+    this.ser.write(getSendCommand(ip, {
       type: "gamestate",
       state: state
     })); // send gamestate to serial

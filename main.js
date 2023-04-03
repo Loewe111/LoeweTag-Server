@@ -85,7 +85,7 @@ function handleIpc() {
     parser.on("data", handleSerial); //Setup parser data handler
     link = new Link(ser); //Create link
     link.getDevices(); //Request devices
-    link.getInformation(); //Request information
+    link.getInformation(); //Request information of already connected devices
   });
 
   ipcMain.handle("serial:disconnect", (event, port) => {
