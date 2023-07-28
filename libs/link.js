@@ -123,6 +123,19 @@ class Link {
     }) + "\n"); // send get_info command to serial
     return true;
   }
+
+  /**
+   * Locate a device
+   * @param {String} ip - ip of the device
+   * @returns {boolean} - true on success
+  */
+  locateDevice(ip) {
+    if (!this.checkSerial()) return false; // check if serial is connected, if not return false
+    this.ser.write(getSendCommand(ip, {
+      type: "locate"
+    })); // send locate command to serial
+    return true;
+  }
 }
 
 /**
