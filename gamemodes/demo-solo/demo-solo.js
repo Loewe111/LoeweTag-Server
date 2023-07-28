@@ -16,7 +16,7 @@ class game {
           MSP: 100,
           ATK: 0,
           MATK: 10,
-          RT: 10,
+          RT: 2,
           PTS: 0,
           KILL: 0,
           TIMER: -1,
@@ -26,20 +26,20 @@ class game {
     });
     this.intervalID = 0;
     this.link = link;
-    this.link.setGamestate(1);
-    this.link.setColor([0, 0, 255]);
   }
   init() {
+    this.link.setGamestate(1);
+    this.link.setColor([0, 0, 255]);
     Object.entries(this.values).forEach(([id, value]) => {
       this.link.setValues(value, id);
     });
   }
   start() {
-    this.link.setGamestate(2);
     Object.entries(this.values).forEach(([id, value]) => {
       //Iterate over all Player, id->player id, value-> object with values
       value.TIMER = 1;
     });
+    this.link.setGamestate(2);
   }
   tick() {
     Object.entries(this.values).forEach(([id, value]) => {
