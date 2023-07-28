@@ -36,7 +36,9 @@ class Link {
     ip = getIP(ip);
     this.ser.write(getSendCommand(ip, {
       type: "color",
-      color: colorArray
+      r: colorArray[0],
+      g: colorArray[1],
+      b: colorArray[2]
     })); // send color to serial
     return true;
   }
