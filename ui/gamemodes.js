@@ -151,9 +151,9 @@ async function displaySettings(settings, values) {
   });
 }
 
-async function setTeam(team, id) {
-  teams[id] = team;
-  document.getElementById("button-" + id).innerHTML = colors[team];
+async function setTeam(team, ip) {
+  teams[ip] = team;
+  document.getElementById("button-" + ip).innerHTML = colors[team];
 }
 
 function getDropdown(buttonString, elements, functionString, parameter) {
@@ -175,7 +175,7 @@ function getDropdown(buttonString, elements, functionString, parameter) {
     itemButton.innerHTML = value;
     if (typeof parameter !== "undefined") {
       itemButton.onclick = new Function(
-        functionString + "(" + index + "," + parameter + ")"
+        functionString + "(" + index + ", \"" + parameter + "\")"
       );
     } else {
       itemButton.onclick = new Function(functionString + "(" + index + ")");
