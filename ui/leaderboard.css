@@ -1,44 +1,48 @@
 :root{
-  --teamRed: rgb(255,0,0);
-  --teamGreen: rgb(0,255,0);
-  --teamBlue: rgb(0,0,255);
-  --teamYellow: rgb(255,255,0);
-  --teamCyan: rgb(0, 255, 255);
-  --teamPurple: rgb(255,0,255);
-  --teamOrange: rgb(255,127,0);
+  --teamRed: linear-gradient(-45deg, #ea6069, #f86670);
+  --teamGreen: linear-gradient(-45deg, #66f87e, #68ff9f);
+  --teamBlue: linear-gradient(-45deg, #66b6f8, #68a6ff);
+  --teamYellow: linear-gradient(-45deg, #f8f866, #fffa68);
+  --teamCyan: linear-gradient(-45deg, #66f8f8, #68ffff);
+  --teamPurple: linear-gradient(-45deg, #c387ff, #d287ff);
+  --teamOrange: linear-gradient(-45deg, #f8b766, #ffba68);
   --teamNone: rgb(255,255,255);
 }
 
 .bg-team-red{
-  background-color: var(--teamRed);
+  background: var(--teamRed);
 }
 .bg-team-green{
-  background-color: var(--teamGreen);
+  background: var(--teamGreen);
 }
 .bg-team-blue{
-  background-color: var(--teamBlue);
+  background: var(--teamBlue);
 }
 .bg-team-yellow{
-  background-color: var(--teamYellow);
+  background: var(--teamYellow);
 }
 .bg-team-cyan{
-  background-color: var(--teamCyan);
+  background: var(--teamCyan);
 }
 .bg-team-purple{
-  background-color: var(--teamPurple);
+  background: var(--teamPurple);
 }
 .bg-team-orange{
-  background-color: var(--teamOrange);
+  background: var(--teamOrange);
 }
 .bg-team-none{
-  background-color: var(--teamNone);
+  background: var(--teamNone);
 }
 
+.team-card h2, 
+.team-card h4 {
+  color: white;
+  text-shadow: 0px 0px 5px black;
+}
 
 .hidden{
   display: none;
 }
-
 
 .rainbow{
   background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);

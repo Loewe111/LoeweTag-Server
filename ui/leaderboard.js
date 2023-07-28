@@ -72,7 +72,7 @@ function createLeaderboardFields(teamsArray, MAX_COLUMNS) {
   teamsArray.forEach((team) => {
     //create the div
     div = document.createElement("div");
-    div.classList = "container text-black rounded m-2 p-2 hidden ";
+    div.classList = "team-card container rounded m-2 p-2 ";
     div.classList.add(teamClasses[team.id]);
     div.id = team.id;
     //put the div in the object
@@ -81,6 +81,8 @@ function createLeaderboardFields(teamsArray, MAX_COLUMNS) {
 
   //get the leaderboard div
   leaderboard = document.getElementById("leaderboard");
+  //clear the leaderboard
+  leaderboard.innerHTML = "";
   var columnsLeft = 0; //number of columns left to fill
   //display the teams in the leaderboard
   Object.values(divs).forEach((team) => {
