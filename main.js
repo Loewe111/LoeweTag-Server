@@ -82,9 +82,10 @@ function handleIpc() {
     link = new Link(ser); //Create link
     parser = new ReadlineParser(); //Create parser
     ser.pipe(parser); //Pipe serial port to parser
-    ser.write("@init"); //Send initailization message
     parser.on("data", handleSerial); //Setup parser data handler
     link = new Link(ser); //Create link
+    link.getDevices(); //Request devices
+    link.getInformation(); //Request information of already connected devices
   });
 
   ipcMain.handle("serial:disconnect", (event, port) => {
@@ -206,7 +207,6 @@ function handleIpc() {
 
 function handleSerial(data) {
   // Handle serial data
-  data = data.replaceAll("'", '"'); //Replace all ' with " for compability with old gun software
   try {
     //Try to parse data
     message = JSON.parse(data);
@@ -216,43 +216,35 @@ function handleSerial(data) {
     return;
   }
   log.debug(message);
-  if (message.type == "thisNode") {
-    //If message is a thisNode message, save it to devices as master
-    devices[message.id] = {
-      master: true,
-      firmware: message.fw,
-      type: "master",
-    };
-  } else if (message.type == "connectionChange") {
-    //If message is a connectionChange message, save it to devices
-    Object.entries(devices).forEach(([key, value]) => {
-      if (!value.master && !message.nodes.includes(key)) {
+  if (message.type == "devices") {
+    // Remove all devices that are not in message
+    Object.keys(devices).forEach((key) => {
+      if (!message.devices.includes(key)) {
         delete devices[key];
       }
     });
-    message.nodes.forEach((id, index) => {
-      if (!(id in devices)) {
-        devices[id] = { master: false };
+    // Add new devices
+    for(device of message.devices) {
+      if (!devices.hasOwnProperty(device)) {
+        devices[device] = {
+          type: "unknown",
+          firmware: "unknown"
+        };
       }
-    });
-  } else if (message.type == "deviceInfo") {
-    //If message is a deviceInfo message, save it to devices
-    devices[message.id].firmware = message.fw;
-    devices[message.id].type = message.deviceType;
-  } else if (message.type == "request") {
-    //If message is a request message, handle it
-    if (message.request == "gamestate") {
-      //If request is gamestate, send gamestate
-      link.setGamestate(gamestate.state, message.from);
     }
+  } else if (message.type == "device_information") {
+    //If message is a deviceInfo message, save it to devices
+    devices[message.ip].firmware = message.firmware;
+    devices[message.ip].type = message.device_type;
   } else if (message.type == "hit") {
     //If message is a hit message, handle it
     if (
       typeof gamemode !== "undefined" &&
-      gamemode.players.includes(message.id)
+      gamemode.players.includes(message.sender) &&
+      gamemode.players.includes(message.ip)
     ) {
-      //If gamemode is defined, handle hit
-      gamemode.hit(message.id, message.from); //Call gamemode hit function
+      //If gamemode is defined and players exist, handle hit
+      gamemode.hit(message.ip, message.sender); //Call gamemode hit function
     }
   } else {
     log.warn("Unknown Message Type: " + message.type); //If message type is unknown, log warning

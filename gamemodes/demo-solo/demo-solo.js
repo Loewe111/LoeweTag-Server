@@ -8,7 +8,7 @@ class game {
     this.values = {};
     this.players = []; //this value is required, it is a list containing the ids of all participating players
     Object.entries(devices).forEach(([key, value]) => {
-      if (value.type == "gun") {
+      if (value.type == "pistol") {
         this.values[key] = {
           HP: 30,
           MHP: 30,

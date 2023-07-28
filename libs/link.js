@@ -28,24 +28,32 @@ class Link {
   /**
    * Set the color of a device
    * @param {Array} colorArray - array of colors
-   * @param {int} id - id of the device, leave undefined to send to all devices
+   * @param {String} ip - ip of the device, leave undefined to send to all devices
    * @returns {boolean} - true on success
    */
-  setColor(colorArray, id) {
+  setColor(colorArray, ip) {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
-    this.ser.write(encodeMessages("color", colorArray, id)); // send color array to serial
+    ip = getIP(ip);
+    this.ser.write(getSendCommand(ip, {
+      type: "color",
+      color: colorArray
+    })); // send color to serial
     return true;
   }
 
   /**
    * Set the gamestate
    * @param {int} state - gamestate
-   * @param {int} id - id of the device, leave undefined to send to all devices
+   * @param {String} ip - ip of the device, leave undefined to send to all devices
    * @returns {boolean} - true on success
    */
-  setGamestate(state, id) {
+  setGamestate(state, ip) {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
-    this.ser.write(encodeMessage("gamestate", state, id)); // send gamestate to serial
+    ip = getIP(ip);
+    this.ser.write(getSendCommand(ip, {
+      type: "gamestate",
+      state: state
+    })); // send gamestate to serial
     return true;
   }
 
@@ -61,11 +69,12 @@ class Link {
    * @param {int} values.PTS - Points of the player
    * @param {int} values.KILL - Kills of the player
    *
-   * @param {int} id - id of the device, leave undefined to send to all devices
+   * @param {String} ip - ip of the device, leave undefined to send to all devices
    * @returns {boolean} - true on success
    */
-  setValues(values, id) {
+  setValues(values, ip) {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
+    ip = getIP(ip);
     //check if all values are set
     if (
       values.HP == undefined ||
@@ -79,86 +88,64 @@ class Link {
     )
       return false;
 
-    this.ser.write(
-      encodeMessages(
-        "vars",
-        [
-          values.HP,
-          values.MHP,
-          values.SP,
-          values.MSP,
-          values.ATK,
-          values.RT,
-          values.PTS,
-          values.KILL,
-        ],
-        id
-      )
-    ); // send values to serial
+    this.ser.write(getSendCommand(ip, {
+      type: "vars",
+      HP:   values.HP,
+      MHP:  values.MHP,
+      SP:   values.SP,
+      MSP:  values.MSP,
+      ATK:  values.ATK,
+      RT:   values.RT,
+      PTS:  values.PTS,
+      KILL: values.KILL,
+    })); // send values to serial
     return true;
   }
 
   /**
-   * Send a custom message to the device
-   * @param {string} type - type of message
-   * @param {string} message - message
-   * @param {int} id - id of the device, leave undefined to send to all devices
-   * @returns {boolean} - true on success
-   * @deprecated should not be used for future reasons
+   * Request Connected Devices
    */
-  sendMessage(type, message, id) {
+  getDevices() {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
-    this.ser.write(encodeMessage(type, message, id)); // send custom message to serial
+    this.ser.write(JSON.stringify({
+      type: "get_devices"
+    }) + "\n"); // send get_devices command to serial
     return true;
   }
 
   /**
-   * Send multiple custom messages to the device
-   * @param {string} type - type of message
-   * @param {Array} messages - array of messages
-   * @param {int} id - id of the device, leave undefined to send to all devices
-   * @returns {boolean} - true on success
-   * @deprecated should not be used for future reasons
+   * Request device info
    */
-  sendMessages(type, messages, id) {
+  getInformation() {
     if (!this.checkSerial()) return false; // check if serial is connected, if not return false
-    this.ser.write(encodeMessages(type, messages, id)); // send custom messages to serial
+    this.ser.write(JSON.stringify({
+      type: "information"
+    }) + "\n"); // send get_info command to serial
     return true;
   }
 }
 
 /**
- * Used to encode a message to send to every or a specific device
- * @param {string} type - type of message
- * @param {string} message - message
- * @param {int} id - id of the device, leave undefined to send to all devices
+ * Generate a command to send to the device
+ * @param {string} ip Ip of the receiving device
+ * @param {Object} sendData Data to send
+ * @returns {String} JSON Command to send
  */
-function encodeMessage(type, message, id) {
-  if (id == undefined) {
-    buf = "@" + type + message + "\n";
-  } else {
-    buf = id + "@" + type + message + "\n";
-  }
-  return buf;
+function getSendCommand(ip, sendData) {
+  return JSON.stringify({
+    type: "send",
+    ip: ip,
+    content: JSON.stringify(sendData)
+  }) + "\n";
 }
 
 /**
- * Used to encode multiple messages to send to every or a specific device
- * @param {string} type - type of message
- * @param {Array} messages - array of messages
- * @param {int} id - id of the device, leave undefined to send to all devices
+ * Returns the ip of the device or 255.255.255.255 if ip is undefined (broadcast)
+ * @param {String} ip input ip
+ * @returns {String} output ip
  */
-function encodeMessages(type, messages, id) {
-  if (id == undefined) {
-    buf = "@" + type;
-  } else {
-    buf = id + "@" + type;
-  }
-  for (i of messages) {
-    buf = buf + i + "#";
-  }
-  buf = buf.slice(0, -1) + "\n";
-  return buf;
+function getIP(ip) {
+  return ip ? ip : "255.255.255.255";
 }
 
 module.exports = Link;
