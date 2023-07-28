@@ -250,7 +250,7 @@ function handleSerial(data) {
       gamemode.players.includes(message.ip)
     ) {
       //If gamemode is defined and players exist, handle hit
-      gamemode.hit(message.ip, message.sender); //Call gamemode hit function
+      gamemode.hit(message.sender, message.ip); //Call gamemode hit function
     }
   } else {
     log.warn("Unknown Message Type: " + message.type); //If message type is unknown, log warning
