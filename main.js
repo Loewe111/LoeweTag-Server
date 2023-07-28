@@ -70,6 +70,11 @@ function handleIpc() {
     return devices;
   });
 
+  ipcMain.handle("devices:locateDevice", (event, ip) => {
+    //Locate device
+    link.locateDevice(ip);
+  });
+
   ipcMain.handle("serial:getDevices", () => {
     //Get serial devices
     return SerialPort.list();
@@ -236,7 +241,8 @@ function handleSerial(data) {
     //If message is a deviceInfo message, save it to devices
     devices[message.ip].firmware = message.firmware;
     devices[message.ip].type = message.device_type;
-  } else if (message.type == "hit") {
+    devices[message.ip].id = message.device_id;
+  } else if (message.type == "hit") { 
     //If message is a hit message, handle it
     if (
       typeof gamemode !== "undefined" &&
