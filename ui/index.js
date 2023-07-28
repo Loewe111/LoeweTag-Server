@@ -1,6 +1,12 @@
 serialConnected = false;
 serialPort = undefined;
 
+deviceTypes = {
+  master: "LoeweTag Link",
+  pistol: "Pistol",
+  unknown: "Unknown",
+}
+
 async function setup() {
   serialState = await window.serial.getState();
   serialConnected = serialState.isOpen;
@@ -21,9 +27,19 @@ async function main() {
     for ([key, value] of Object.entries(deviceList)) {
       row = table.insertRow(-1);
       row.insertCell(-1).innerHTML = key;
-      row.insertCell(-1).innerHTML = value.type;
+      row.insertCell(-1).innerHTML = value.id == 0 ? "" : value.id;
+      row.insertCell(-1).innerHTML = (deviceTypes[value.type] || deviceTypes.unknown) + ` <span class="tooltip-text">${value.type}</span>`;
       // row.insertCell(-1).innerHTML = value.teamId
       row.insertCell(-1).innerHTML = value.firmware;
+      actions = row.insertCell(-1);
+      actions.classList = "actions";
+      if (value.type != "master") {
+        button = document.createElement("button");
+        button.innerHTML = '<span class="material-symbols-rounded">my_location</span>  Locate';
+        button.classList = ["btn btn-sm btn-primary"];
+        button.onclick = new Function("window.devices.locateDevice(\"" + key + "\")");
+        actions.appendChild(button);
+      }
     }
   } else {
     serialDeviceList = await window.serial.getDevices();

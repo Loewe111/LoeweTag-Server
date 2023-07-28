@@ -6,3 +6,13 @@
   position: relative;
   top: -1px;
 }
+
+.actions > * {
+  margin-right: 0.5rem;
+}
+
+.tooltip-text {
+  font-size: 0.8em;
+  font-weight: 400;
+  color: #aaa;
+}
