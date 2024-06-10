@@ -5,20 +5,23 @@ const { ReadlineParser } = require("@serialport/parser-readline");
 const fs = require("fs");
 
 const Logging = require("./libs/logging"); //Logging class
-const Link = require("./libs/link"); //Link class
+const serialHandler = require("./libs/serialHandler"); //Serial handler class
+const Player = require("./libs/player"); //Player class
+const { send } = require("process");
 
 log = new Logging(4); //Create logger
 log.info("Starting up..."); //Log startup
 
-var link = new Link(); //Create link
+var serHandler = new serialHandler(handleSerial); //Create serial handler
 
 devices = {};
+players = {};
 gamestate = {
   state: 0,
   running: false,
 };
 
-ser = NaN;
+serPort = NaN;
 
 var leaderboardOpen = false;
 
@@ -72,7 +75,7 @@ function handleIpc() {
 
   ipcMain.handle("devices:locateDevice", (event, ip) => {
     //Locate device
-    link.locateDevice(ip);
+    // TODO: Implement on pistols
   });
 
   ipcMain.handle("serial:getDevices", () => {
@@ -83,27 +86,25 @@ function handleIpc() {
   ipcMain.handle("serial:connectTo", (event, port) => {
     //Connect to serial device
     devices = {}; //Clear devices
-    ser = new SerialPort({ path: port, baudRate: 115200 }); //Create serial port
-    link = new Link(ser); //Create link
-    parser = new ReadlineParser(); //Create parser
-    ser.pipe(parser); //Pipe serial port to parser
-    parser.on("data", handleSerial); //Setup parser data handler
-    link = new Link(ser); //Create link
-    link.getDevices(); //Request devices
-    link.getInformation(); //Request information of already connected devices
+    serPort = new SerialPort({ path: port, baudRate: 115200 }); //Create serial port
+    serHandler.port = serPort; 
+    serPort.on("data", (data) => {
+      serHandler.dataHandler(data);
+    });
+    serHandler.send(serHandler.message_types["MESSAGE_INIT_MASTER"]); //Request devices list
   });
 
   ipcMain.handle("serial:disconnect", (event, port) => {
     //Disconnect from serial device
-    ser.close(); //Close serial port
+    serPort.close(); //Close serial port
   });
 
   ipcMain.handle("serial:getState", () => {
     //Get serial state
     return {
-      isOpen: ser.isOpen,
-      path: ser.path,
-      baudRate: ser.baudRate,
+      isOpen: serPort.isOpen,
+      path: serPort.path,
+      baudRate: serPort.baudRate,
     };
   });
 
@@ -125,15 +126,24 @@ function handleIpc() {
       gamestate.running = false;
       clearInterval(gamemode.intervalID);
     }
-    gamemode = new gamemodes[gameid].game(devices, link); //Create gamemode
+    players = {}
+    Object.values(devices).forEach((device) => {
+      if (device.type != 1) return;
+      players[device.id] = new Player(device.id, playerCallback);
+      sendPlayer(device.id);
+    });
+    gamemode = new gamemodes[gameid].game(players); //Create gamemode
     gamemode.init(); //Initialize gamemode
     gamestate.gameid = gameid;
+    serHandler.send(serHandler.message_types["MESSAGE_SET_GAMESTATE"], { state: 0 });
+    console.log(serHandler.message_types["MESSAGE_SET_GAMESTATE"]);
   });
 
   ipcMain.handle("game:startGame", () => {
     //Start game
     gamemode.start();
     gamestate.running = true;
+    serHandler.send(serHandler.message_types["MESSAGE_SET_GAMESTATE"], { state: 1 });
     gamemode.intervalID = setInterval(() => {
       //Start gamemode interval
       gamemode.tick();
@@ -144,6 +154,7 @@ function handleIpc() {
     //Stop game
     gamemode.stop();
     gamestate.running = false;
+    serHandler.send(serHandler.message_types["MESSAGE_SET_GAMESTATE"], { state: 0 });
     clearInterval(gamemode.intervalID);
   });
 
@@ -210,51 +221,46 @@ function handleIpc() {
   });
 }
 
-function handleSerial(data) {
-  // Handle serial data
-  try {
-    //Try to parse data
-    message = JSON.parse(data);
-  } catch (e) {
-    //If parsing fails, log error and return
-    log.error("Error while parsing data: '" + e + "', Original Input: " + data);
-    return;
-  }
-  log.debug(message);
-  if (message.type == "devices") {
-    // Remove all devices that are not in message
-    Object.keys(devices).forEach((key) => {
-      if (!message.devices.includes(key)) {
-        delete devices[key];
-      }
+function handleSerial(type, data) {
+  log.debug(type);
+  if (type == serHandler.message_types["MESSAGE_DEVICES_LIST"]) {
+    let newDevices = {};
+    data.forEach((device) => {
+      newDevices[device.id] = device;
     });
-    // Add new devices
-    for(device of message.devices) {
-      if (!devices.hasOwnProperty(device)) {
-        devices[device] = {
-          type: "unknown",
-          firmware: "unknown"
-        };
-      }
-    }
-  } else if (message.type == "device_information") {
-    //If message is a deviceInfo message, save it to devices
-    devices[message.ip].firmware = message.firmware;
-    devices[message.ip].type = message.device_type;
-    devices[message.ip].id = message.device_id;
-  } else if (message.type == "hit") { 
+    devices = newDevices;
+  } else if (type == serHandler.message_types["MESSAGE_HIT"]) { 
     //If message is a hit message, handle it
-    if (
-      typeof gamemode !== "undefined" &&
-      gamemode.players.includes(message.sender) &&
-      gamemode.players.includes(message.ip)
-    ) {
+    if (typeof gamemode !== "undefined") {
       //If gamemode is defined and players exist, handle hit
-      gamemode.hit(message.sender, message.ip); //Call gamemode hit function
+      gamemode.hit(data.shooter, data.target); //Call gamemode hit function
     }
   } else {
-    log.warn("Unknown Message Type: " + message.type); //If message type is unknown, log warning
+    log.warn("Unknown Message Type: " + type); //If message type is unknown, log warning
   }
+}
+
+function playerCallback(player, type) {
+  if (type == "health") {
+    serHandler.send(serHandler.message_types["MESSAGE_SET_HEALTH"], {
+      health: player.health,
+      maxHealth: player.maxHealth,
+    }, player.id);
+  } else if (type == "weapon") {
+    serHandler.send(serHandler.message_types["MESSAGE_SET_WEAPON"], player.weapon, player.id);
+  } else if (type == "color") {
+    serHandler.send(serHandler.message_types["MESSAGE_SET_COLOR"], player.color, player.id);
+  }
+}
+
+function sendPlayer(id) {
+  player = players[id];
+  serHandler.send(serHandler.message_types["MESSAGE_SET_HEALTH"], {
+    health: player.health,
+    maxHealth: player.maxHealth,
+  }, player.id);
+  serHandler.send(serHandler.message_types["MESSAGE_SET_WEAPON"], player.weapon, player.id);
+  serHandler.send(serHandler.message_types["MESSAGE_SET_COLOR"], player.color, player.id);
 }
 
 //Load gamemodes
