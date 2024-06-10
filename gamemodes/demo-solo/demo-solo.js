@@ -1,69 +1,51 @@
-/**
- * The game mode class.
- * @param {Object} devices - The devices object.
- * @param {Link} link - The link object.
- */
+
 class game {
-  constructor(devices, link) {
-    this.values = {};
-    this.players = []; //this value is required, it is a list containing the ids of all participating players
-    Object.entries(devices).forEach(([key, value]) => {
-      if (value.type == "pistol") {
-        this.values[key] = {
-          HP: 30,
-          MHP: 30,
-          SP: 50,
-          MSP: 100,
-          ATK: 0,
-          MATK: 10,
-          RT: 2,
-          PTS: 0,
-          KILL: 0,
-          TIMER: -1,
-        };
-        this.players.push(key);
-      }
-    });
+  constructor(players) {
+    this.players = players; 
     this.intervalID = 0;
-    this.link = link;
   }
   init() {
-    this.link.setGamestate(1);
-    this.link.setColor([0, 0, 255]);
-    Object.entries(this.values).forEach(([id, value]) => {
-      this.link.setValues(value, id);
+    Object.values(this.players).forEach((player) => {
+      player.weapon.active = false;
+      player.weapon.power = 10;
+      player.weapon.reloadTime = 1000;
+      player.health = 30;
+      player.maxHealth = 30;
+      player.color = { r: 255, g: 0, b: 0 };
+      player.timer = -1;
     });
   }
   start() {
-    Object.entries(this.values).forEach(([id, value]) => {
-      //Iterate over all Player, id->player id, value-> object with values
-      value.TIMER = 1;
+    Object.values(this.players).forEach((player) => {
+      player.weapon.active = true;
     });
-    this.link.setGamestate(2);
   }
   tick() {
-    Object.entries(this.values).forEach(([id, value]) => {
-      //Iterate over all Player, id->player id, value-> object with values
-      if (value.TIMER > 0) {
-        value.TIMER -= 1;
+    Object.values(this.players).forEach((player) => {
+      if (player.timer > 0) {
+        player.timer -= 1;
       }
-      if (value.TIMER == 0) {
-        value.ATK = value.MATK;
-        value.HP = value.MHP;
-        value.TIMER = -1;
+      if (player.timer == 0) {
+        player.weapon.active = true;
+        player.health = player.maxHealth;
+        player.timer = -1;
       }
-      if (value.HP <= 0 && value.TIMER < 0) {
-        value.TIMER = value.RT;
-        value.ATK = 0;
+      if (player.health <= 0 && player.timer < 0) {
+        player.timer = 10;
+        player.weapon.active = false;
       }
-      this.link.setValues(value, id);
     });
   }
   hit(sendID, recieveID) {
-    this.values[recieveID].HP -= this.values[sendID].ATK;
+    if (this.players[recieveID] == undefined || this.players[sendID] == undefined) return;
+    if (this.players[recieveID].health <= 0) return;
+    this.players[recieveID].health -= this.players[sendID].weapon.power;
+    this.players[sendID].points += 10 + this.players[recieveID].health;
   }
   stop() {
-    this.link.setGamestate(1);
+    Object.values(this.players).forEach((player) => {
+      player.weapon.active = false;
+    });
   }
 }
 
