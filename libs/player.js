@@ -6,6 +6,8 @@ class Player {
     this._maxHealth = 30;
     this.points = 0;
     this.callback = callback;
+    this._frozen = false;
+    this._changes = {};
   }
 
   weapon = new Proxy({
@@ -17,12 +19,12 @@ class Player {
     {
     set: (target, property, value) => {
       target[property] = value;
-      this.callback(this, 'weapon');
+      this.onchange('weapon');
       return true;
     },
   });
 
-  color = new Proxy({
+  _color = new Proxy({
     r: 255,
     g: 0,
     b: 0,
@@ -30,14 +32,14 @@ class Player {
   {
     set: (target, property, value) => {
       target[property] = value;
-      this.callback(this, 'color');
+      this.onchange('color');
       return true;
     },
   });
 
   set health(value) {
     this._health = Math.max(value, 0);
-    this.callback(this, 'health');
+    this.onchange('health');
   }
 
   get health() {
@@ -46,11 +48,31 @@ class Player {
 
   set maxHealth(value) {
     this._maxHealth = Math.max(value, 0);
-    this.callback(this, 'health');
+    this.onchange('health');
   }
 
   get maxHealth() {
     return this._maxHealth;
+  }
+
+  onchange(type) {
+    if (!this._frozen) {
+      this.callback(this, type)
+    } else {
+      this._changes[type] = true;
+    }
+  }
+
+  freeze() {
+    this._frozen = true;
+  }
+
+  unfreeze() {
+    this._frozen = false;
+    for (let type in this._changes) {
+      this.onchange(type);
+    }
+    this._changes = {};
   }
 
 }
