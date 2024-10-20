@@ -81,9 +81,9 @@ function handleIpc() {
     return devices;
   });
 
-  ipcMain.handle("devices:locateDevice", (event, ip) => {
-    //Locate device
-    // TODO: Implement on pistols
+  ipcMain.handle("devices:locateDevice", (event, id) => {
+    // Locate Device
+    serHandler.send(serHandler.message_types["MESSAGE_LOCATE"], 0x00, id);
   });
 
   ipcMain.handle("serial:getDevices", () => {

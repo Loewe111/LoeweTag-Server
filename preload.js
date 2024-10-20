@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("devices", {
   //Expose devices object to renderer
   getDevices: () => ipcRenderer.invoke("devices:getDevices"),
-  locateDevice: (ip) => ipcRenderer.invoke("devices:locateDevice", ip),
+  locateDevice: (id) => ipcRenderer.invoke("devices:locateDevice", id),
 });
 
 contextBridge.exposeInMainWorld("serial", {

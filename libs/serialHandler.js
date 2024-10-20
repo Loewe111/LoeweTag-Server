@@ -11,6 +11,7 @@ class serialHandler {
     "MESSAGE_DEVICE_INFORMATION": 0x01,
     "MESSAGE_SET_GAMESTATE": 0x02,
     "MESSAGE_INIT_MASTER": 0x03,
+    "MESSAGE_LOCATE": 0x04,
     "MESSAGE_SET_COLOR": 0x10,
     "MESSAGE_SET_WEAPON": 0x11,
     "MESSAGE_SET_HEALTH": 0x12,
@@ -109,6 +110,8 @@ class serialHandler {
       buffer.push(data.reloadType, ...this.bytes_from_uint16(data.reloadTime), ...this.bytes_from_uint16(data.power), data.active ? 0x01 : 0x00, data.beam);
     } else if (type == this.message_types["MESSAGE_SET_HEALTH"]) {
       buffer.push(data.health, data.maxHealth);
+    } else if (type == this.message_types["MESSAGE_LOCATE"]) {
+      buffer.push(0x00);
     }
     buffer = this.escape_buffer(buffer);
     buffer.unshift(0x7A);
