@@ -244,6 +244,12 @@ function handleSerial(type, data) {
       //If gamemode is defined and players exist, handle hit
       gamemode.hit(data.shooter, data.target); //Call gamemode hit function
     }
+  } else if (type == serHandler.message_types["MESSAGE_REQUEST_INFO"]) {
+    if (players[data.id] != undefined) {
+      sendPlayer(data.id);
+    } else {
+      log.warn("Player requested info, but player does not exist: " + data.id);
+    }
   } else {
     log.warn("Unknown Message Type: " + type); //If message type is unknown, log warning
   }

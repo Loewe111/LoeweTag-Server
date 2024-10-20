@@ -16,6 +16,7 @@ class serialHandler {
     "MESSAGE_SET_HEALTH": 0x12,
     "MESSAGE_HIT": 0x20,
     "MESSAGE_DEVICES_LIST": 0x21,
+    "MESSAGE_REQUEST_INFO": 0x22,
   }
 
   // Structs:
@@ -88,6 +89,11 @@ class serialHandler {
       }
       console.log(devices);
       this.callback(type, devices);
+    } else if (type == this.message_types["MESSAGE_REQUEST_INFO"]) {
+      this.callback(type, {
+        id: this.uint16_from_buffer(buffer, 1),
+        reason: buffer[3],
+      });
     }
   }
 
