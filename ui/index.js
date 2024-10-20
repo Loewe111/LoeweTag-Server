@@ -2,9 +2,14 @@ serialConnected = false;
 serialPort = undefined;
 
 deviceTypes = {
-  master: "LoeweTag Link",
-  pistol: "Pistol",
   unknown: "Unknown",
+  0: '<i class="fa-solid fa-satellite-dish"></i> LoeweTag Link',
+  1: '<i class="fa-solid fa-gun"></i> Pistol',
+}
+
+deviceStatus = {
+  0: '<i class="fa-solid fa-plug-circle-xmark"></i> Disconnected',
+  1: '<i class="fa-solid fa-plug"></i> Connected',
 }
 
 async function setup() {
@@ -22,21 +27,22 @@ async function setup() {
 async function main() {
   if (serialConnected) {
     deviceList = await window.devices.getDevices();
+    // Sort devices by type
     table = document.getElementById("device-table");
     table.innerHTML = "";
-    for ([key, value] of Object.entries(deviceList)) {
+    for ([key, value] of Object.entries(deviceList).sort((a, b) => a[1].type - b[1].type)) {
       row = table.insertRow(-1);
       row.insertCell(-1).innerHTML = key;
-      row.insertCell(-1).innerHTML = value.id == 0 ? "" : value.id;
-      row.insertCell(-1).innerHTML = (deviceTypes[value.type] || deviceTypes.unknown) + ` <span class="tooltip-text">${value.type}</span>`;
+      // row.insertCell(-1).innerHTML = value.id == 0 ? "" : value.id;
+      row.insertCell(-1).innerHTML = `<span class="tooltip-text">${value.type}</span> ${(deviceTypes[value.type] || deviceTypes.unknown)}`;
       // row.insertCell(-1).innerHTML = value.teamId
-      row.insertCell(-1).innerHTML = value.firmware;
+      row.insertCell(-1).innerHTML = deviceStatus[value.status];
       actions = row.insertCell(-1);
       actions.classList = "actions";
       if (value.type != "master") {
         button = document.createElement("button");
-        button.innerHTML = '<span class="material-symbols-rounded">my_location</span>  Locate';
-        button.classList = ["btn btn-sm btn-primary"];
+        button.innerHTML = '<i class="fa-solid fa-compass"></i> Locate';
+        button.classList = ["btn btn-sm btn-primary btn-symbol"];
         button.onclick = new Function("window.devices.locateDevice(\"" + key + "\")");
         actions.appendChild(button);
       }
