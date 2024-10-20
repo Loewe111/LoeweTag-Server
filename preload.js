@@ -23,11 +23,19 @@ contextBridge.exposeInMainWorld("game", {
   selectGame: (gameid) => ipcRenderer.invoke("game:selectGame", gameid),
   getPlayers: () => ipcRenderer.invoke("game:getPlayers"),
   setTeams: (teams) => ipcRenderer.invoke("game:setTeams", teams),
-  getTeams: () => ipcRenderer.invoke("game:getTeams"),
+  getTeams: () => [],
   getScores: () => ipcRenderer.invoke("game:getScores"),
   setSettings: (settings) => ipcRenderer.invoke("game:setSettings", settings),
   getSettings: () => ipcRenderer.invoke("game:getSettings"),
   toggleLeaderboardWindow: () => ipcRenderer.invoke("game:toggleLeaderboardWindow")
+});
+
+contextBridge.exposeInMainWorld("teams", {
+  getTeams: () => ipcRenderer.invoke("teams:getTeams"),
+  addTeam: () => ipcRenderer.invoke("teams:addTeam"),
+  removeTeam: (id) => ipcRenderer.invoke("teams:removeTeam", id),
+  movePlayer: (player, team) => ipcRenderer.invoke("teams:movePlayer", player, team),
+  rename: (id, name) => ipcRenderer.invoke("teams:rename", id, name),
 });
 
 window.addEventListener("DOMContentLoaded", () => {

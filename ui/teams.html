@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="">
+    <script src="https://kit.fontawesome.com/a4e8bb500b.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="teams.css">
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script src="teams.js" defer></script>
+    <title>LoeweTag</title>
+  </head>
+  <body>
+    <nav class="bg-danger p-2">
+      <a href="index.html" class="btn btn-outline-dark btn-symbol text-white mx-1"><i class="fa-solid fa-tower-broadcast"></i>Devices</a>
+      <a href="gamemodes.html" class="btn btn-outline-dark btn-symbol text-white mx-1"><i class="fa-solid fa-dice"></i>Gamemodes</a>
+      <a href="teams.html" class="btn btn-dark btn-symbol text-white mx-1"><i class="fa-solid fa-people-group"></i>Teams</a>
+      <a href="leaderboard.html" class="btn btn-outline-dark btn-symbol text-white mx-1"><i class="fa-solid fa-list-ol"></i>Leaderboard</a>
+
+      <a class="btn btn-danger" style="float: right;" href="about.html"><b>LoeweTag</b></a>
+
+      <button class="btn btn-dark btn-symbol text-white mx-3" onclick="window.game.toggleLeaderboardWindow();" style="float: right;"><i class="fa-solid fa-window-restore"></i>Scoreboard Window</button>
+    </nav>
+    <main>
+        <div id="no-team-options">
+            <button class="btn btn-dark btn-symbol" onclick="returnAllPlayers()"><i class="fa-solid fa-arrow-left"></i>Return All</button>
+            <button class="btn btn-dark btn-symbol" onclick="spreadPlayers()"><i class="fa-solid fa-arrows-turn-right"></i>Spread</button>
+        </div>
+        <div id="no-team" class="team" data-id="-1">
+            <div class="title">
+                <span class="team-name">Unassigned</span>
+            </div>
+            <div class="players"></div>
+        </div>
+        <div id="team-options">
+            <button class="btn btn-dark btn-symbol" onclick="addTeam()"><i class="fa-solid fa-plus"></i>Add Team</button>
+            <button class="btn btn-dark btn-symbol" onclick="removeAllTeams()"><i class="fa-solid fa-trash"></i>Remove All</button>
+        </div>
+        <div id="teams"></div>
+    </main>
+  </body>
+</html>

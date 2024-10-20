@@ -7,6 +7,7 @@ const fs = require("fs");
 const Logging = require("./libs/logging"); //Logging class
 const serialHandler = require("./libs/serialHandler"); //Serial handler class
 const Player = require("./libs/player"); //Player class
+const Teams = require("./libs/teams"); //Teams class
 const { send } = require("process");
 
 log = new Logging(4); //Create logger
@@ -20,6 +21,13 @@ gamestate = {
   state: 0,
   running: false,
 };
+teams = new Teams(players);
+
+// add 10 players for testing
+for (let i = 0; i < 10; i++) {
+  players[i] = new Player(i, playerCallback);
+  teams.defaultTeam.addPlayer(players[i]);
+}
 
 serPort = NaN;
 
@@ -126,12 +134,6 @@ function handleIpc() {
       gamestate.running = false;
       clearInterval(gamemode.intervalID);
     }
-    players = {}
-    Object.values(devices).forEach((device) => {
-      if (device.type != 1) return;
-      players[device.id] = new Player(device.id, playerCallback);
-      sendPlayer(device.id);
-    });
     gamemode = new gamemodes[gameid].game(players); //Create gamemode
     gamemode.init(); //Initialize gamemode
     gamestate.gameid = gameid;
@@ -160,30 +162,29 @@ function handleIpc() {
 
   ipcMain.handle("game:getPlayers", () => {
     //Get players
-    if (typeof gamemode !== "undefined") {
-      //If gamemode is defined, return players
-      return gamemode.players;
-    } else {
-      return [];
-    }
+    console.log(players);
+    return players;
   });
 
-  ipcMain.handle("game:setTeams", (event, teams) => {
-    //Set teams
-    if (typeof gamemode !== "undefined") {
-      //If gamemode is defined, set teams
-      gamemode.setTeams(teams);
-    }
+  ipcMain.handle("teams:getTeams", (event) => {
+    console.log(teams.getTeams());
+    return teams.getTeams();
   });
 
-  ipcMain.handle("game:getTeams", (event) => {
-    //Get teams
-    if (typeof gamemode !== "undefined") {
-      //If gamemode is defined, return teams
-      return gamemode.teams;
-    } else {
-      return {};
-    }
+  ipcMain.handle("teams:addTeam", (event) => {
+    return teams.addTeam();
+  });
+
+  ipcMain.handle("teams:removeTeam", (event, id) => {
+    return teams.removeTeam(id);
+  });
+
+  ipcMain.handle("teams:movePlayer", (event, player, team) => {
+    return teams.movePlayer(player, team);
+  });
+
+  ipcMain.handle("teams:rename", (event, id, name) => {
+    return teams.rename(id, name);
   });
 
   ipcMain.handle("game:getScores", (event) => {
@@ -227,6 +228,14 @@ function handleSerial(type, data) {
     let newDevices = {};
     data.forEach((device) => {
       newDevices[device.id] = device;
+      if (players[device.id] == undefined && device.type == 1) {
+        players[device.id] = new Player(device.id, playerCallback);
+        teams.defaultTeam.addPlayer(players[device.id]);
+        console.log("new player added");
+        console.log(players);
+        console.log(teams);
+        sendPlayer(device.id);
+      }
     });
     devices = newDevices;
   } else if (type == serHandler.message_types["MESSAGE_HIT"]) { 

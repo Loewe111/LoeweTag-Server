@@ -16,3 +16,10 @@
   font-weight: 400;
   color: #aaa;
 }
+
+.btn-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
