@@ -15,6 +15,7 @@ class Player {
       reloadTime: 0,
       power: 0,
       active: false,
+      beam: 0,
     },
     {
     set: (target, property, value) => {

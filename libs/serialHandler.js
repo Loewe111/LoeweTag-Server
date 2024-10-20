@@ -23,8 +23,8 @@ class serialHandler {
   device(id, type, status) {
     return { id: id, type: type, status: status };
   }
-  pistol_weapon(reloadType, reloadTime, power, active) {
-    return { reloadType: reloadType, reloadTime: reloadTime, power: power, active: active };
+  pistol_weapon(reloadType, reloadTime, power, active, beam=0) {
+    return { reloadType: reloadType, reloadTime: reloadTime, power: power, active: active, beam: beam };
   }
 
   // Functions:
@@ -106,7 +106,7 @@ class serialHandler {
     } else if (type == this.message_types["MESSAGE_SET_COLOR"]) {
       buffer.push(data.r, data.g, data.b);
     } else if (type == this.message_types["MESSAGE_SET_WEAPON"]) {
-      buffer.push(data.reloadType, ...this.bytes_from_uint16(data.reloadTime), ...this.bytes_from_uint16(data.power), data.active ? 0x01 : 0x00);
+      buffer.push(data.reloadType, ...this.bytes_from_uint16(data.reloadTime), ...this.bytes_from_uint16(data.power), data.active ? 0x01 : 0x00, data.beam);
     } else if (type == this.message_types["MESSAGE_SET_HEALTH"]) {
       buffer.push(data.health, data.maxHealth);
     }
