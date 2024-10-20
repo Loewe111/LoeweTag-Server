@@ -24,11 +24,8 @@ class Player {
     },
   });
 
-  _color = new Proxy({
-    r: 255,
-    g: 0,
-    b: 0,
-  },
+  _color = { r: 255, g: 0, b: 0 };
+  _color_proxy = new Proxy(this._color,
   {
     set: (target, property, value) => {
       target[property] = value;
@@ -36,6 +33,17 @@ class Player {
       return true;
     },
   });
+
+  set color(value) {
+    this._color.r = value.r;
+    this._color.g = value.g;
+    this._color.b = value.b;
+    this.onchange('color');
+  }
+
+  get color() {
+    return this._color_proxy;
+  }
 
   set health(value) {
     this._health = Math.max(value, 0);
