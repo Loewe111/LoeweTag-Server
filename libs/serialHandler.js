@@ -99,6 +99,7 @@ class serialHandler {
   }
 
   send(type, data, target = 0xFFFF) {
+    if (this.port == null) return;
     let buffer = [];
     buffer.push(...this.bytes_from_uint16(target))
     buffer.push(type);
